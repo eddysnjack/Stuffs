@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            margin: auto;
+            font-family: sans-serif;
+            background: #e7e7e7;
+        }
+
+        img {
+            width: 500px;
+        }
+
+        .images {
+            text-align: center;
+        }
+
+        section {
+            margin: auto;
+            width: 70%;
+            text-align: center;
+
+        }
+
+        .encryption_part_container {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+        }
+
+        input,
+        label,
+        textarea,
+        span {
+            margin: 2px;
+        }
+
+        .explanation {
+            margin-top: 15em;
+            margin-bottom: 15em;
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: justify;
+            line-height: 1.5em;
+        }
+
+        .footnotes {
+            font-weight: 800;
+            margin-top: 1em;
+        }
+
+        #INFO_txt_key_input {
+            padding: 2px;
+            margin: 1px;
+            color: #f8f8f8;
+        }
+
+        /* textarea,input{
+            display: block;
+            width: 200px;
+        } */
+    </style>
+</head>
+
+<body>
+    <br>
+    <section class="encryption_part">
+        <div class="encryption_part_container">
+            <label>Anahtarı girin</label>
+            <input type="text" id="txt_key_input">
+            <span id="INFO_txt_key_input"></span>
+        </div>
+        <div class="encryption_part_container">
+            <label>Düz Metin</label>
+            <textarea id="TA_plainText" cols="30" rows="10"></textarea>
+
+
+        </div>
+        <div class="encryption_part_container">
+            <div></div>
+            <input type="button" value="Sifrelemeyi başlat" id="btn_encrypt">
+        </div>
+        <br>
+        <br>
+        <div class="encryption_part_container">
+            <label for="">Şifreli Metin</label>
+            <textarea id="TA_cipherText" cols="30" rows="10"></textarea>
+        </div>
+    </section>
+    <section class="explanation">
+        <div>
+            <b>Notlar:</b> <br>
+            uğraşıp yapmaya çalıştığım şey bir des algoritması. nasıl çalıştığını kabaca çözdüm ama bir sorun var.
+            şifrelenecek metin ve anahtarımı nasıl olacak da istenen bit uzunluğuna(64 bit) getireceğim?
+            anahtarı uzatmak veya kıslatmak kolay. onu zaten rc4'u yaparken öğrenmiştim. tine rc4'ü kullanıp istenen
+            uzunlukta
+            bir anahtar elde edebilirim. ama ya düz metin? düz metni 64 bitlik bloklara bölükten sonra ister istemez
+            bir parça
+            geriye kalacak ve 64 bit uzunluğunda olmayacak. sorun tam olarak burda. çeşitli metotlar var onları
+            anlamaya çalışıyorum.
+            benim şu an için ilk aklıma gelen, son kısmı full 0 ile doldururum, kaldı ki zaten böyle de bir yöntem
+            varmış. Ama çok da tavsiye edilmiyor.
+            dahası kodumu nasıl test edeceğim onu da bulmam lazım. eğer standar implementasyonun dışına çıkarsam,
+            hatalı bir kod yazdığımda
+            bunu test etme imkanım da olmaz :/
+            <br><br>
+            burda -> https://cryptography.io/en/latest/hazmat/primitives/padding/
+            <br>
+            zannedersem bir python şifreleme kütüphanesinin dökümantasyonu var ve gördüğüm kadarıyla eksik kısımlar
+            'null pointer' ile dolduruluyormuş ki çok mantıklı :) null pointer bit dizisini bozar sanıyordum ama öyle
+            değilmiş. baya boş karakter yani hayat kurtardı ya hu resmen :)
+            <br><br>
+            ayrıca not: fazla dikkatsiz davranmışım, test için kullandığım sitede implementasyondan kısaca bahsedilmiş
+            ve onlar da ihtiyaç halinde null char kullandıklarını söylemişler. iyi oldu bu :)
+            <br><br>
+            şu cryptography kütüphanesini de deneyeyim en azından dopru yolda olup olmadığımı anlarım...
+            <br><br>
+            tam oldu derken bir sorun daha belirdi kafamda :/ bazı karakterler 8 bitten fazla(mesela ş),
+            bunları şifreledik diyelim, sonra gerye doğru nasıl çözeceğim? elimde uzun bir bir dizisi var? ee sonra?
+            8'er 8'er biçtim diyelim...aradaki 16 bitlik karakterler iki farklı 8 bit olacak ? nidicieağz?
+            ayrıca verilen şifre uzunluğunun 64 bitten fazla olma olasılığı da var :/...offf beeee. daha başlayamadım
+            bu kafamdaki meseleler yüzünden, tamı tamına 22.14-17.50 =?? baya bir saattir uğraşıyorum işte :) saatler
+            oldu yav :) sadece şu kafamdaki soruları çözebilmek için... tek bir satır bile yazmadım :/ çok fazla detaya
+            takılıyorum...bunu bırakmam lazım...ama her detayı belli bir işe girişmek gibisi de yk ki arkadaş...
+            <br> <br>
+            anahtarları eş uzunluğa çekmek için hash algoritması kullanılabilirmiş...hmmm <br>
+            https://stackoverflow.com/questions/23027359/encryption-of-file-problems-with-key-size
+            <br><br>
+            anahtar uzunluğunu şimdilik 64 bit olarak kullanıcıdan ayarlayacak ekilde ayarlarız da... şu 16 bitlik
+            karakter işini çözmem lazım
+
+            <br><br>
+            böyle giderse hiç başlamadan bitecek bu iş. şimdilik türkçe karakter olmayan ve şifre uzunluğu tam olarak
+            64 bit olan ihtimaller için kod yazacağım sonra geliştirmeye çalışırız.
+            <br><br>
+            (Yaklaşık 16 saat sonra 23.03.2019 ctsi gününün tammı)
+            <br><br>
+            şimdiye kadar iyi gitti...16 farklı anahtar elde etmeyi başardım sonunda.
+            baya uzun sürdü ve şimdiden ortalık karışmaya başladı. genlede implementasyon kısmı insanı yoruyor.
+            <br>
+            yani algoritma nasıl işliyor anlamak zaten zaman alıcı, bir de yapmak istediğinizi yapmaya çalışırken
+            kullandığınızı dilin(bu durumda javascript) zorlukları ile kaeşılaşıyorsunuz. bu da böyle anımdır :)
+            <br>
+            yaptığım şeyleri uzun uzun anlatmak istiyorum ama biraz karışık. düzgün ifade edebileceğimden pek emin
+            değilim. en iyisi bittikten sonra sakin kafayla doldurayım ben buraları.
+
+
+            <div class="footnotes">
+                test için bir site: <a href="http://des.online-domain-tools.com">http://des.online-domain-tools.com</a>
+                <br><br>
+                derste anlatılanları anlatan bir video: <br> ECB vb uygulamaların amacı hem blokları perdelemek hem de
+                uzunlukları ayarlamak galiba anladığım
+                kadarıyla. ama bu videoda bundan bahsedilmemiş :/
+                <br><a
+                    href="https://www.youtube.com/watch?v=aflVXL8N_WI">https://www.youtube.com/watch?v=aflVXL8N_WI</a>
+
+                <br><br>
+                ascii tablosu
+                <a href="http://www.defindit.com/ascii.html">http://www.defindit.com/ascii.html</a>
+                <br><br>
+                null karakter yazıcılarda ihtiyaç halinden çıkmış, makul aslında ama hiç düşünmediğim bir mesele
+                olmasından mütevellit şaşırtıcı :) <br>
+                <a href="https://en.wikipedia.org/wiki/Null_character">https://en.wikipedia.org/wiki/Null_character</a>
+                <div class="images">
+                    <img src="GenelDosya/Des_ Expansion permutation E.jpg">
+                    <br>
+                    <img src="GenelDosya/Des_Initial key permutation PC−1.png">
+                    <br>
+                    <img src="GenelDosya/Des_Initial permutation IP-IP-1.jpg">
+                    <br>
+                    <img src="GenelDosya/Des_S_boxes-1.jpg">
+                    <br>
+                    <img src="GenelDosya/Des_S_boxes-2.jpg">
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        //--------------------------------------------------------------------------CONSTANT DOM ELEMENTS
+        const TXT_key_input = document.getElementById('txt_key_input');
+        const BTN_encrypt = document.getElementById('btn_encrypt');
+        const INFO_txt_key_input = document.getElementById('INFO_txt_key_input');
+        const TA_plainText = document.getElementById('TA_plainText');
+        const TA_cipherText = document.getElementById('TA_cipherText');
+        //--------------------------------------------------------------------------işlemler için gerekli blobal sabitler
+        //anahtar bitlerini karıştıran dizi(tek tek elle girmesi de bir acayip, kendimi numaralara takılmış saykolar hissettim)
+        const inital_key_permutation = [
+            57, 49, 41, 33, 25, 17, 9, 1,
+            58, 50, 42, 34, 26, 18, 10, 2,
+            59, 51, 43, 35, 27, 19, 11, 3,
+            60, 52, 44, 36, 63, 55, 47, 39,
+            31, 23, 15, 7, 62, 54, 46, 38,
+            30, 22, 14, 6, 61, 53, 45, 37,
+            29, 21, 13, 5, 28, 20, 12, 4
+        ];
+        //anahtar oluşturmanın diğer adımlarında kullanılan key_permutation pc-2
+        const round_key_permuatiton = [
+            14, 17, 11, 24, 1, 5, 3, 28,
+            15, 6, 21, 10, 23, 19, 12, 4,
+            26, 8, 16, 7, 27, 20, 13, 2,
+            41, 52, 31, 37, 47, 55, 30, 40,
+            51, 45, 33, 48, 44, 49, 39, 56,
+            34, 53, 46, 42, 50, 36, 29, 32
+        ];
+        //şifreleme sırasında xor için kullanılacak dizi, 32 biti alıp 48 bit yapacak
+        const expansion_permutation = [
+            32, 1, 2, 3, 4, 5,
+            4, 5, 6, 7, 8, 9,
+            8, 9, 10, 11, 12, 13,
+            12, 13, 14, 15, 16, 17,
+            16, 17, 18, 19, 20, 21,
+            20, 21, 22, 23, 24, 25,
+            24, 25, 26, 27, 28, 29,
+            28, 29, 30, 31, 32, 1
+
+        ];
+        //gelen blockların bitlerinin karıştırılması için kullanılacak dizi
+        const initial_block_permutation = [
+            58, 50, 42, 34, 26, 18, 10, 2,
+            60, 52, 44, 36, 28, 20, 12, 4,
+            62, 54, 46, 38, 30, 22, 14, 6,
+            64, 56, 48, 40, 32, 24, 16, 8,
+            57, 49, 41, 33, 25, 17, 9, 1,
+            59, 51, 43, 35, 27, 19, 11, 3,
+            61, 53, 45, 37, 29, 21, 13, 5,
+            63, 55, 47, 39, 31, 23, 15, 7
+
+        ];
+
+        const final_block_permutation = [
+            40, 8, 48, 16, 56, 24, 64, 32,
+            39, 7, 47, 15, 55, 23, 63, 31,
+            38, 6, 46, 14, 54, 22, 62, 30,
+            37, 5, 45, 13, 53, 21, 61, 29,
+            36, 4, 44, 12, 52, 20, 60, 28,
+            35, 3, 43, 11, 51, 19, 59, 27,
+            34, 2, 42, 10, 50, 18, 58, 26,
+            33, 1, 41, 9, 49, 17, 57, 25
+        ];
+        //--------------------------------------------------------------------------EVENTLAR
+        BTN_encrypt.addEventListener('click', (e) => {
+            //eldeki stringi bit dizisiine çevir
+            let bitVersionOfString = getBitVersionOfString(TXT_key_input.value);
+            //bit dizisi sonucunu ve uzunluğunu al
+            bitStream = bitVersionOfString.bitStream;
+            lengthofBits = bitVersionOfString.lengthofString;
+            //bit uzunluğu yeterli ise "yeşil" ışık yak.
+            size_checked(lengthofBits);
+            //anahtar yeri boş değilse ve girilen değer 64 bit ise işleme başla
+            if (TXT_key_input.value != "" && lengthofBits == 64 && TA_plainText.value != "") {
+                //------TEST KISMI
+                // let testarray = [];
+                // for (let i = 1; i <= 64; i++) {
+                //     testarray[i - 1] = i;
+
+                // }
+                // let allGeneratedKeys = generateKeys(testarray);
+                // console.log(allGeneratedKeys);
+                //_________________________________
+                //Eldeki
+                let all48BitKeys = generateKeys(bitStream);
+                console.log(all48BitKeys);
+                //girilen metni 64Bitlik Bloklara böl;
+                let plainString = TA_plainText.value;
+                let plainTextIn64BitBlocks = stringTo64BitBlocks(plainString);
+
+
+            }
+        });
+        TXT_key_input.addEventListener('input', (e) => {
+            let results = getBitVersionOfString(TXT_key_input.value);
+            bitStream = results.bitStream;
+            lengthofBits = results.lengthofString;
+            size_checked(lengthofBits);
+        });
+        //--------------------------------------------------------------------------FONKSIYONLAR
+        //=====================16 farklı anahtarı oluşturan GENEL Fonksiyon
+        function generateKeys(bitStream) {
+            //initial permuation ile 64 bitlik anahtar içerisinden istenen yerleri al işle ve 56bite düşür.
+            var reArrangedKey = arrangeKey(bitStream);
+            //bu 56 bitlik anahtarı c0 ve d0 diye iki parçaya böl
+            C0andD0 = splitTheArrangedKey(reArrangedKey)
+            let c0 = C0andD0.c0;
+            let d0 = C0andD0.d0;
+            //bölünmüş anahtarı al ve bunları 16 kez çevirerek(başını sonuna almak sureti ile)
+            //değiştir. bazen iki kez bazen bir kez çeviriyoruz. bunların tamamını bir obje içine attık.
+            //ayrıca her bir çevrilmiş dizi bir sonraki çevrmede kullanılıyor. c1'i oluştururken c0'ı,c2'yi 
+            //oluştururken c1'i kullanıyoruz vs. vs.
+            let shifted_arrays = rotateCandDs(c0, d0);
+            let c0Toc16 = shifted_arrays.c0Toc16;
+            let d0Tod16 = shifted_arrays.d0Tod16;
+            console.log(c0Toc16);
+            console.log(d0Tod16); // TEST
+            //bu c ve d dizilerini P-2 tablosuna göre düzenle
+            let resultKeys = [];
+            for (let i = 1; i < c0Toc16.length; i++) {
+                resultKeys[i] = make48bitKeys(c0Toc16[i], d0Tod16[i]);
+            }
+
+            return resultKeys;
+        }
+        //=====================Duz metni bitlere dönüştüren ve 64Bitlik parçalara bölen GENEL FONKSİYON
+        function stringTo64BitBlocks(plainString) {
+            //Stringi bit dizisi haline getir
+            let bitResults = getBitVersionOfString(plainString);
+            let bitStream = bitResults.bitStream;
+            let length = bitResults.lengthofString;
+            // console.log("plaintext bit stream results\n")
+            // console.log(bitStream);
+            // console.log(length);
+            let blokUzunluğu = 64;
+            let result = [];
+            let index = 0;
+            for (let i = 0; i < bitStream.length; i += blokUzunluğu) {
+                result[index] = bitStream.slice(i, i + blokUzunluğu);
+                index++;
+            }
+            if (result[result.length - 1] % 64 != 0) {
+                console.log('if içi çalıtı')
+                let temp = result[result.length - 1];
+                for (let i = 0; i < 64 - temp.length; i++) {
+                    temp = temp + "\x00";
+                    console.log(i);
+                }
+
+                console.log("TEMP");
+                console.log(temp.length)
+            }
+            // console.log(result);//TEST
+            return result;
+        }
+
+        function make48bitKeys(cArray, dArray) {
+            let concatedArray = cArray.concat(dArray);
+            let result = [];
+            // console.log(concatedArray); //test amaçlı -çalışıyor
+            for (let i = 0; i < round_key_permuatiton.length; i++) {
+                result[i] = concatedArray[round_key_permuatiton[i] - 1];
+            }
+            return result;
+        }
+
+        function rotateCandDs(c0, d0) {
+            let c0Results = [];
+            let d0Results = [];
+            c0Results[0] = c0;
+            d0Results[0] = d0;
+            for (let i = 1; i <= 16; i++) {
+
+                if (i == 1 || i == 2 || i == 9 || i == 16) { // rotate ones
+                    c0Results[i] = rotateLeft(c0Results[i - 1]);
+                    d0Results[i] = rotateLeft(d0Results[i - 1]);
+                } else { //rotate twice
+                    let c0Temp = rotateLeft(c0Results[i - 1]);
+                    let d0Temp = rotateLeft(d0Results[i - 1]);
+                    c0Results[i] = rotateLeft(c0Temp);
+                    d0Results[i] = rotateLeft(d0Temp);
+                }
+
+            }
+            return {
+                "c0Toc16": c0Results,
+                "d0Tod16": d0Results
+            };
+        }
+        //ilk elemanı kaldır sona ekle. bu da kaydırma işlemi oldu
+        //ekleme: bu fonksiyon çok mantıklı ama asla yeni ir obje oluşturmuyor. sürekli orjinali 
+        //üzerinde oynama yapıyor, böyle olunca da tüm versiyonlar aynı oluyor. ilginç bir şey. 
+        //bunun farklı bir versiyonu YAZACAĞIM. AMA İBRETİ ALEM OLSUN DİYE BUNU DA BURDA BIRAKIYORUM :)
+        // function rotateLeft(anArray) { // rotate çevirme işlemi, shift değil bkz!
+        //     let result = anArray;
+        //     let temp = result.shift(); //ilk elmena at
+        //     result[result.length] = temp; //sona ekle
+        //     return result;
+        // }
+        function rotateLeft(anArray) { // rotate çevirme işlemi, shift değil bkz!
+            let result = [];
+            let temp = anArray[0];
+            result[anArray.length - 1] = temp;
+            for (let i = 1; i < anArray.length; i++) {
+                result[i - 1] = anArray[i];
+            }
+            return result;
+        }
+        //56 elemanlık dizi burda ikiye bölünecek ilk 28 eleman C0, ikinci 28 eleman D0 olacak
+        function splitTheArrangedKey(inputArray) {
+            let resultC0 = [];
+            let resultD0 = [];
+            let halflength = inputArray.length / 2;
+            for (let i = 0; i < halflength; i++) {
+                resultC0[i] = inputArray[i];
+                resultD0[i] = inputArray[i + halflength];
+            }
+            return {
+                "c0": resultC0,
+                "d0": resultD0
+            };
+        }
+
+        function arrangeKey(bitStream) {
+            var result = [];
+            for (let i = 0; i < inital_key_permutation.length; i++) {
+                result[i] = bitStream[
+                    inital_key_permutation[i] - 1
+                    // -1 çünkü lanet olası diziler 0'dan indekslenmiş. 
+                    //57. nokta aslında 56. nokta vs.
+                ];
+            }
+
+            return result;
+        }
+
+        //usual String to bit string 2 parts = getBitVersionOfString & getBitsOfString
+        function getBitVersionOfString(str_input) {
+            var bitCode = [];
+            //kodları bul
+            for (let i = 0; i < str_input.length; i++) {
+                bitCode[i] = str_input.charCodeAt(i).toString(2);
+                //kodlar genelde kaç bit ise o kadar uzunluktadır, bunu düzelt(5 bit ise 8 yap, 10 bit ise 16 yap gibi)
+                var element = bitCode[i];
+                var lengthOfString = element.length;
+                if (lengthOfString < 8) {
+                    for (let i = 0; i < 8 - lengthOfString; i++) {
+                        element = '0' + element;
+                    }
+                } else if (lengthOfString < 16) {
+                    for (let i = 0; i < 16 - lengthOfString; i++) {
+                        element = '0' + element;
+                    }
+                }
+                bitCode[i] = element;
+            }
+            //---------
+            let bitVersionOfString = bitCode;
+            let stringOfBits = bitVersionOfString.join('');
+            let length = stringOfBits.length;
+            return {
+                "bitStream": stringOfBits,
+                "lengthofString": length
+            };
+        }
+        //indicator for showing bit length of key right next to the text input
+        function size_checked(value) {
+            if (value == 64) {
+                INFO_txt_key_input.innerHTML = value + "Bit";
+                INFO_txt_key_input.style.background = "#0eaa09";
+            } else {
+                INFO_txt_key_input.innerHTML = value + "Bit";
+                INFO_txt_key_input.style.background = "#AA0000";
+            }
+        }
+    </script>
+</body>
+
+</html>

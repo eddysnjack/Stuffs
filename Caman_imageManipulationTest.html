@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="bootstrap-4.1.3-dist/css/bootstrap.css">
+    <script src="GenelJS/jquery-3.3.1.js"></script>
+    <script src="GenelJS/caman.full.min.js"></script>
+</head>
+
+<body>
+    <div class="border border-primary" style="display:block; 
+    align-content: center;
+    justify-content: center;
+    text-align: center">
+
+        <input type="file" id="upload-file" />
+        <input style="" type="button" id="saveimage" value="save image">
+        <br>
+        <input type="button" id="br--" value="-Brigthness">
+        <input type="button" id="br++" value="+Brigthness">
+        <input type="button" id="reset" value="RESET">
+        <input type="number" id="maxSize" placeholder="max width(min 100)" min='100'>
+        <br>
+        <canvas id="my-canvas" style="background-color:#000;margin:1em;border:2px solid blue;"></canvas>
+        <br>
+        <p id=test></p>
+    </div>
+
+    <div style="margin:auto;width:60em;">
+        <p style="padding:1em;text-align: justify;">
+            ilginç bir şekilde firefoxta daha iyi çalışıyor.
+            görünüşe göre file elementlerinin 'change' event'ının ateşlenmesi chrome için farklı bir dosya seçmeyi
+            gerektitirken firefox için yeniden seçim yapmak(aynı dosya olsa bile) yeterli.
+            düzeltmek için farklı eventlar denedim <br>
+            'load'--->(alakası yok hiç çalışmıyor) <br>
+            'input' --->mdn sayfasında bunun change'den daha iyi olduğu söylenmiş(change her zaman ateşlenmek zorunda
+            değil, input ateşlenirmiş!!). chrome için hiç de öyle değil malesef :/ <br>
+            <br>
+            stackoverflowda: <br>
+            https://stackoverflow.com/questions/5942821/how-to-fire-event-on-file-select/40581284#40581284 <br>
+            burda güzel görünen bir cevap verilmiş. file inputunu nasıl kontrol ederim demiş elman
+            alttaki de klasik cevabı vermiş. ardından benim karşılaştığım sorunu yazmış biri, peki ya aynı dosya
+            seçilirse?
+            diye. sonra da bu cevap eksik minvlalinde alt kısımlardaki başka bir cevabı göstermiş.
+            orda cidden güzel bir mantık var. butona iki tane eventlistener atıyoruz biri 'click' diğeri de change.
+            her click uygulandığında value'yi boş yapıyoruz. gördüğüm en zarif çözüm bu diyerek hemen denedim.
+            ama hayal kırıklığına uğradim. her nasılsa file elementinin değerini değiştirmek neredeyse hatta kesinlikle
+            imkansız.
+            çalışmıyor insafsız!!
+            <br>
+            peki dedim input nasıl temizlenir onu arayayım bari dedim: <br>
+            https://stackoverflow.com/questions/829571/clearing-an-html-file-upload-field-via-javascript <br>
+            bu sefer de gelen çözümler aşağı yukarı aynı. elementin eskisini sil, yenisini yaz....obaaaaaaa yoh ama
+            ebesinin!!
+            <br> kolay dşye jquery' clone zımbırtısını denedim. olmadı abi. bu sefer sürekli elementi üstüne mi
+            yazıyoruz,
+            yoksa değerini okumaya fırsat bulamadan üstüne mi yazıyoru b,lm,yorum ama çalışmadı.
+            click eventı içine değil de 'change' içine atın demişti birisi yorumlarda. bu da çok mantıklıydı.
+            elmn değiştikten sonra kendisini sfırlayacaktı. böylece change eventı garanti gerçekleşecekti...ama bu da
+            olmadı. olmadı olmadı olmadı. işin kötüsü hata felan da almıyorum. bir yerde yanlış mı yaptım yoksa cidden
+            çalışmıyor mu onu da bilmiyorum
+
+            sade makul bir sayfada deneme yapmam lazım. jquer olmayan milyon tane versiyonu var bunun ama bir yerden
+            sonra,
+            lanet olsun bu işe dedim. bu kadar bariz ve basit bir sorun neden düzeltilmez daha doğrusu chrome neden
+            buna bu
+            kadar sıkı bir şekilde neden karşı çıkar anlamış değilim.
+            tüm tarayıcı sahipleri oturup adam akıllı bir mantıkta buluşsa ya. neyin ızdırabı bu amk! saçmalığın
+            daniskası.
+            bu web işinin kullanıcı olarak basitliğine hayranım ama developer olarak yersiz karmaşıklığından midem
+            bulanıyor.
+            zaten hep bu ikisi arasında gidip gel,yorum. bir iş yapacam ya aslında tarayıcıda dehşet olurdu diyorum.
+            başlıyorum sonrdan dank ediyor ki...naaa tarayıcı hiç de öyle iyi bir çözüm değil.
+            bıkıyorum, bırakıyorum. sonra araya zaman giriyor...niye bıraktğımı unutuyorum, ya aslında iyidi diyorum
+            obaaa
+            sonra bir dsha sil baştan kısır
+            döngü :)
+        </p>
+
+        <p>
+            peki bu zımbırtı ne yapar ?<br>
+            seçilen resmi alır, kare çerçevye koyar, boş kalan yerleri de siyah renkle doldurur.
+            kısaca instagramda paylaşmaya hazır hale getirir.
+            <br> brightness buonları ile ufak bir efekt vermek de mümlün. reset efekti sıfırlar.
+            textbx kısmına değer girilirse resmin boyutu ona göre değiştirilir. şimdilik bunu yapıyor.
+            <br>
+            <br>
+            emim olamadığım şey klavyeeye bakmadan yazmak baya zormuş nasıl yazacam ben şimdi. görmem kazım lan!!! :)
+        </p>
+    </div>
+
+    <!--     SCRIPT    -->
+
+    <script>
+        let fileName = "";
+        let img = new Image();
+        let maxSize;
+        maxSize = parseInt(maxSize);
+        const uploadfile = document.getElementById("upload-file");
+        const canvas = document.getElementById("my-canvas");
+        const ctx = canvas.getContext('2d');
+        //to keep backgroundwhile saving the file https://stackoverflow.com/questions/18609715/html5-canvas-todataurl-image-has-no-background-color
+        // ctx.fillStyle = "green";
+        const btn_saveimage = document.getElementById('saveimage');
+
+        //FILTERS AND STUFF
+        document.addEventListener('click', (e) => {
+            if (e.target.id == "br++") {
+                // console.log("afdsfsdfsdf")
+                Caman('#my-canvas', img, function () {
+                    this.brightness(5).render();
+                });
+            }
+            if (e.target.id == "br--") {
+                // console.log("afdsfsdfsdf")
+                Caman('#my-canvas', img, function () {
+                    this.brightness(-5).render();
+                });
+            }
+            if (e.target.id == "reset") {
+                // console.log("afdsfsdfsdf")
+                Caman('#my-canvas', img, function () {
+                    this.revert();
+                    document.getElementById('maxSize').value = null;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height); //clear canvas
+                });
+            }
+        });
+
+        //UPLOAD FILE 
+        uploadfile.addEventListener('click', (e) => {
+
+            console.log("deneme");
+        });
+        uploadfile.addEventListener('change', (e) => {
+            //get file
+            const file = document.getElementById("upload-file").files[0];
+            const reader = new FileReader();
+
+            if (file) {
+                //set name
+                fileName = file.name;
+                reader.readAsDataURL(file);
+            }
+
+            reader.addEventListener('load', (e) => {
+                img = new Image();
+                //set src
+                img.src = reader.result;
+
+                //onload add to canvas
+                img.onload = function () {
+                    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); //clear canvas
+                    var canvWidth = 0;
+                    var canvHeight = 0;
+                    var drawWidth = 0;
+                    var drawHeight = 0;
+                    const imgRatio = img.width / img.height;
+                    drawX = 0;
+                    drawY = 0;
+                    maxSize = parseInt(document.getElementById("maxSize").value);
+                    //-------------------------------------
+                    // var newCanv;
+                    // var newCtx;
+                    //-------------------------------------
+                    if (maxSize > 100 && maxSize != NaN) {
+                        if (img.width > img.height) {
+                            canvWidth = maxSize;
+                            canvHeight = maxSize;
+                            drawWidth = maxSize;
+                            drawHeight = Math.floor(maxSize / imgRatio);
+                            drawY = Math.abs(maxSize - drawHeight) / 2;
+
+                        } else {
+                            canvWidth = maxSize;
+                            canvHeight = maxSize;
+                            drawWidth = Math.floor(maxSize * imgRatio);
+                            drawHeight = maxSize;
+                            drawX = Math.abs(maxSize - drawWidth) / 2;
+                        }
+                        // newCanv = document.createElement('canvas');
+                        // newCtx = newCanv.getContext('2d');
+                        // newCanv.width = img.width;
+                        // newCanv.height = img.height;
+                        // newCanv.style.border = "2px solid red";
+                        // newCanv.style.backgroundColor = "#FF00FF"
+                        // newCtx.drawImage(img, 0, 0, img.width, img.height);
+                        // document.getElementById('test').appendChild(newCanv);
+                    } else {
+                        if (img.width > img.height) {
+                            canvWidth = img.width;
+                            canvHeight = img.width;
+                            drawWidth = img.width;
+                            drawHeight = img.height;
+                            drawY = Math.abs(img.width - img.height) / 2;
+
+                        } else {
+                            canvWidth = img.height;
+                            canvHeight = img.height;
+                            drawWidth = img.width;
+                            drawHeight = img.height;
+                            drawX = Math.abs(img.width - img.height) / 2;
+                        }
+                    }
+
+
+
+                    canvas.width = canvWidth;
+                    canvas.height = canvHeight;
+                    ctx.fillRect(0, 0, canvas.width, canvas.height); //keep/save the background!
+                    ctx.drawImage(img, drawX, drawY, drawWidth, drawHeight);
+                    canvas.removeAttribute('data-caman-id');
+                }
+            });
+
+        });
+
+
+        // DOWNLOAD FILE
+        btn_saveimage.addEventListener('click', (e) => {
+            let event;
+
+            const link = document.createElement('a');
+            var newName = fileName.lastIndexOf('.');
+            newName = fileName.slice(0, newName);
+            link.download = newName + ".png";
+            link.href = canvas.toDataURL('image/png');
+            //create a click and perform on this new "a" element
+            event = new MouseEvent('click');
+            link.dispatchEvent(event);
+        });
+    </script>
+</body>
+
+</html>

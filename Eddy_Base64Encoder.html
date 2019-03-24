@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+
+<body>
+
+    <div class="container">
+        <canvas id="imgsrc" style="background-color:#000;"></canvas>
+    </div>
+    <div class="container" style="display:float;">
+        <input type="file" name="" id="upload-file">
+        <input type="button" value="getBase64URL" id="btnConvert">
+    </div>
+    <div class="container" style="margin-top:5em;margin-bottom:5em;">
+        <label for="tareaResults">Results with new Lines</label>
+        <textarea name="" id="tAreaResults" cols="100" rows="15"></textarea>
+        <br>
+        <br>
+        <label for="tareaResults2">Results without new Lines</label>
+        <textarea name="" id="tAreaResults2" cols="100" rows="15"></textarea>
+    </div>
+    <script>
+        //canvas
+        const canv = document.getElementById("imgsrc");
+        const cntx = canv.getContext('2d');
+        const uploadFile = document.getElementById("upload-file");
+        const tareaResult = document.getElementById('tAreaResults');
+        const tareaResult2 = document.getElementById('tAreaResults2');
+        //Uploaded File
+
+        uploadFile.addEventListener("change", (e) => {
+            const file = document.getElementById("upload-file").files[0];
+            const reader = new FileReader();
+            imgObj = new Image();
+            //check the file
+            if (file) {
+                //set name
+                fileName = file.name;
+                reader.readAsDataURL(file);
+            }
+            //file reader Event
+            reader.addEventListener('load', (e) => {
+
+
+                imgObj.src = reader.result;
+                imgObj.onload = function () {
+
+                    canv.height = imgObj.height;
+                    canv.width = imgObj.width;
+                    cntx.drawImage(imgObj, 0, 0, imgObj.width, imgObj.height);
+                    canv.removeAttribute('data-caman-id');
+
+                }
+            });
+        });
+
+
+        //BUTTON
+        var btnConvert = document.getElementById('btnConvert');
+        btnConvert.addEventListener('click', (e) => {
+            //image base 64
+            var imgBase64URL = imgObj.src;
+            var tempString = "";
+            var begin = 0;
+            for (let index = 50; index < imgBase64URL.length; index += 50) {
+                tempString += imgBase64URL.slice(begin, index) + "\n";
+                begin = index + 1;
+            }
+            tempString += imgBase64URL.slice(begin, imgBase64URL.length);
+            console.log(imgBase64URL.length);
+            tareaResult2.value = imgBase64URL;
+            tareaResult.value = tempString;
+        });
+    </script>
+</body>
+
+</html>

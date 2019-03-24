@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        span{
+        font-size: 18px;
+    }
+    body{
+        margin: auto;
+        width: 50%;
+        margin-top: 1em;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+    </style>
+</head>
+
+<body>
+    <input type="number" name="" id="IN_number">
+    <input type="button" value="calc" id="calculateMoteCarlo">
+    <p>
+        <span>Ne Yapar?</span>
+        <br>
+        verilen bir rakamsal değeri alır(5,10,100,200 vs), o değer kadar (0-1 arasında) random x ve y değeri oluşturur.
+        bunlardan kaçının kareleri
+        toplamının, karekökünün 1 (aslında 0-1 arasını 100 ile genişlettik o yüzden 100) olacağını bulmaya çalışır.
+        ardından bu toplam random sayılar ile bu şarta uyan sayıların oranına bakılır.(daha iyi sonuclar için bu işlem
+        50 kez tekrarlanır ve ortalaması alınır) <br>
+        matematiksel förmüllere göre bu oranın 3'e 4 gibi bir şey(aslında tam olarak 3,14/4) çıkması gerek(2x2'lik bir
+        kare içindeki çemberi düşünün) <br>
+        kısacası bir çembersel bölgenin karesel bölgeye oranından yola çıkarak PI
+        sayısını marco polo yöntemine göre hesaplamaya çalışyoruz. sonuçlar umut verici.
+        <br>
+        Not: sonuçlar consola yazılır. chrome kısayolu CTRL+SHIFT+I
+        <br>
+        <img src="data:image/png;base64,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"
+            alt="">
+    </p>
+    <script>
+        document.getElementById("calculateMoteCarlo").addEventListener('click', (e) => {
+            let times = document.getElementById("IN_number").value;
+            if (!(times <= 0) && !(times > 250000)) {
+                // console.log("if çalıştı")
+                let cemberler = 0;
+                for (let i = 0; i < 50; i++) { //ilk döngü
+                    cemberler += piWithMonteCarlo(times); //ikinci döngü
+                }
+                console.log(cemberler / 50); //ortalamaların toplamının ortalması, yani ortalamanın ortalaması :)
+            } else {
+                alert("rakam girsene!")
+            }
+        });
+
+        function piWithMonteCarlo(n) {
+            cember = 0;
+            sayac = 0;
+            for (let i = 0; i < n; i++) {
+                x = Math.random() * 101; //0 - 100 arası bir sayı(aslında 0.00 - 1.00 olarak düşünelecek)
+                y = Math.random() * 101;
+                powX = Math.pow(x, 2);
+                powY = Math.pow(y, 2);
+                if ((powX + powY) <= 10000) { //sqrt(x^2+y^2) = 100 olacak => x^2+y^2 =10,000
+                    cember++;
+                    // console.log(cember);
+                }
+                sayac++;
+            }
+            return 4 * cember / sayac;
+        }
+    </script>
+</body>
+
+</html>

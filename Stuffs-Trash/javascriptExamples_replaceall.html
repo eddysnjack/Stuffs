@@ -1,0 +1,43 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <textarea id="tarea" rows="4" cols="50"></textarea>
+
+    <script>
+      var markup = document.documentElement.innerHTML;
+      // var test = "windows aşsfsdşkfsddssa windows sdmfsklfs windows";
+      // alert(replaceAll(test, "windows", "eddy") );
+      // markup = replaceAll(markup,"\u011f", "ğ");
+      // markup = replaceAll(markup,"\u011e", "Ğ");
+      // markup = replaceAll(markup,"\u0131", "ı");
+      // markup = replaceAll(markup,"\u0130", "İ");
+      // markup = replaceAll(markup,"\u00f6", "ö");
+      // markup = replaceAll(markup,"\u00d6", "Ö");
+      // markup = replaceAll(markup,"\u00fc", "ü");
+      // markup = replaceAll(markup,"\u00dc", "Ü");
+      // markup = replaceAll(markup,"\u015f", "ş");
+      // markup = replaceAll(markup,"\u015e", "Ş");
+      // markup = replaceAll(markup,"\u00e7", "ç");
+      // markup = replaceAll(markup,"\u00c7", "Ç");
+
+      var deneme =
+        "T\u00fcrkiye\u2019nin ba\u011f\u0131ms\u0131zl\u0131\u011f\u0131i\u00e7in binlerce insan\u0131n \u015fehitd\u00fc\u015ft\u00fc\u011f\u00fc, gen\u00e7-ya\u015fl\u0131,kad\u0131n-erkek demeden d\u00fc\u015fmana kar\u015f\u0131 tekv\u00fccut direndi\u011fi Kurtulu\u015f";
+
+      //replaceAll(deneme, '\u00fc', 'ü');
+      document.getElementById("tarea").innerHTML = deneme;
+
+      function replaceAll(str, find, replace) {
+        return str.replace(new RegExp(escapeRegExp(find), "g"), replace);
+      }
+
+      function escapeRegExp(str) {
+        return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+      }
+    </script>
+  </body>
+</html>

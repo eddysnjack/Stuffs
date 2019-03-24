@@ -1,0 +1,32 @@
+<html>
+
+<head>
+</head>
+
+<body>
+    <form>
+        Ad <input type="text" name="ad" id="adi" /><br>
+        sifre <input tupe="text" name="sifre" id="pas" /><br>
+        <input type="button" value=" Kontrol" onclick="kontrol()" />
+    </form>
+
+
+
+    <script>
+        function kontrol() {
+            var ad = document.getElementById('adi').value;
+            var sifre = document.getElementById('pas').value;
+            // console.log("ad= " + ad);
+            // console.log("sifre=" + sifre);
+            if (ad == "" || sifre == "") {
+                alert("lutfen gerekli alanları doldurunuz.");
+            } else if (ad == "admin" && sifre == "123") {
+                alert('giriş başarılı');
+            } else {
+                alert("giriş hatalı");
+            }
+        }
+    </script>
+</body>
+
+</html>

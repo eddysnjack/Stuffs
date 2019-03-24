@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin: auto;
+    border: 2px solid red;
+    width: 80%;
+    height: 25px;
+
+}
+
+.video_feed_container {
+    position: absolute;
+    width: 657px;
+    height: 429px;
+    left: 89px;
+    top: 58px;
+
+    background: url(../img/avatar3_kucuk.jpg), #DFDFDF;
+    border-radius: 46px;
+}
+
+.class_list {
+    position: absolute;
+    width: 298px;
+    height: 500px;
+    left: 892px;
+    top: 41px;
+
+    background: #686CCE;
+    border-radius: 31px;
+}
+
+.capture_and_scan {
+    position: absolute;
+    width: 120px;
+    height: 50px;
+    left: 358px;
+    top: 557px;
+
+    background: #A5D698;
+    border-radius: 9px;
+}
+
+.capture_text a {
+    position: absolute;
+    width: 110px;
+    height: 15px;
+    left: 12px;
+    top: 15px;
+    text-decoration: none;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: normal;
+
+    color: #000000;
+
+}
+
+.capture_and_scan:hover {
+    background: rgb(186, 112, 255);
+}

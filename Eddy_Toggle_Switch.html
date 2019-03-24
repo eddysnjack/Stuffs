@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<!-- 
+
+  Esin Kaynağı: https://www.youtube.com/watch?v=BQSNBa3gZJU
+ -->
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: #f3f3f3;
+  }
+
+
+  /* Toggle Switch Stuffs */
+  :root {
+    /*
+    this block is for declarng 'global' constant variables
+    https://stackoverflow.com/a/48175165
+    https://developer.mozilla.org/en-US/docs/Web/CSS/--*#Browser_compatibility 
+    */
+    --switch-width: 40px;
+    --switch-heigt: 20px;
+    --switch-move: calc(var(--switch-width) - var(--switch-heigt));
+  }
+
+  .center {
+    position: absolute;
+    top: 1%;
+    left: 95%;
+    transform: translate(-95%, 1%);
+  }
+
+  input[id="toggle-switch"] {
+    position: relative;
+    width: var(--switch-width);
+    height: var(--switch-heigt);
+    -webkit-appearance: none;
+    background: #c6c6c6;
+    outline: none;
+    border-radius: 20px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: 0.5s;
+  }
+
+  input:checked[id="toggle-switch"] {
+    background: #323232
+  }
+
+  input[id="toggle-switch"]:before {
+    content: '';
+    position: absolute;
+    width: var(--switch-heigt);
+    height: var(--switch-heigt);
+    border-radius: 50%;
+    top: 0;
+    left: 0;
+    background: #fff;
+    transform: scale(1.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: 0.5s;
+  }
+
+  input:checked[id="toggle-switch"]:before {
+    left: var(--switch-move);
+    background: #a9a9a9;
+  }
+</style>
+
+<body>
+  <div class="center">
+    <input type="checkbox" id="toggle-switch">
+  </div>
+</body>
+
+
+</html>

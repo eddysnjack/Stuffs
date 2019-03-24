@@ -1,0 +1,107 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <script src="GenelJS/fabricjs-2.4.3.js"></script>
+  <script src="GenelJS/jquery-3.3.1.js"></script>
+  <script src="fabricjs_test.js"></script>
+  <script src="GenelJS/FileSaver.js"></script>
+  <title>Document</title>
+</head>
+
+<body>
+  <img src="GenelDosya/t9 klavye.png" alt="" id="my-image" width="150" />
+  <input type="button" value="Save Image" style="float:right;" id="btn_saveimage" />
+  <div style="display:grid;
+      border:2px solid red;
+      text-align:center;
+      justify-content: center;
+      align-content: center;
+      align-items: center;    
+      width:100%;">
+    <canvas id="testCanv"></canvas>
+  </div>
+
+  <div id="bottom_space" style="border:2px solid blue;
+        padding:10px;
+        margin:10px;"></div>
+  <!--            -->
+  <img src="" alt="" id="result" />
+
+  <!--  
+         .
+         .
+         .
+         .
+         .
+         .
+         .
+      
+               -->
+  <script>
+    var canvas_fabric = new fabric.Canvas("testCanv", {
+      backgroundColor: "#000000"
+    });
+
+    fabric.Image.fromURL("GenelDosya/t9 klavye.png", function (img) {
+      // canvas size will change according to the image and it will be a rectangle
+      if (img.width > img.height) {
+        canvas_fabric.setWidth(img.width);
+        canvas_fabric.setHeight(img.width);
+        //make image position center
+        var imagePadding = Math.abs(img.width - img.height) / 2;
+        img.top = imagePadding;
+      } else {
+        canvas_fabric.setWidth(img.height);
+        canvas_fabric.setHeight(img.height);
+        //make image position center
+        var imagePadding = Math.abs(img.width - img.height) / 2;
+        image_fabric.left = imagePadding;
+      }
+      img.selectable = false;
+
+      canvas_fabric.add(img);
+      canvas_fabric.renderAll();
+    });
+    //canvas size will change according to the image and  it will be a rectangle
+    // if (image_fabric.width > image_fabric.height) {
+    //   canvas_fabric.setWidth(image_fabric.width);
+    //   canvas_fabric.setHeight(image_fabric.width);
+    //   //make image position center
+    //   var imagePadding = Math.abs(image_fabric.width - image_fabric.height) / 2;
+    //   image_fabric.top = imagePadding;
+    // } else {
+    //   canvas_fabric.setWidth(image_fabric.height);
+    //   canvas_fabric.setHeight(image_fabric.height);
+    //   //make image position center
+    //   var imagePadding = Math.abs(image_fabric.width - image_fabric.height) / 2;
+    //   image_fabric.left = imagePadding;
+    // }
+    // image_fabric.selectable = false;
+    // canvas_fabric.add(image_fabric);
+    // canvas_fabric.renderAll();
+
+
+
+    $(document).ready(function () {
+      $("#btn_saveimage").click(SaveImage); //NOT "SaveImage()"" JUST "SaveImage" Bana kafayı yedirtti bu hata amk!!!
+    });
+
+    function SaveImage() {
+      var can = document.getElementById("testCanv")
+      can.toBlob(function (blob) {
+        saveAs(blob, "myimage.png");
+      });
+    }
+
+
+
+    // $("#testCanv").get(0).toBlob(function (blob) {
+    // saveAs(blob, "myimage.png");
+    // }));
+  </script>
+</body>
+
+</html>
