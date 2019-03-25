@@ -72,7 +72,7 @@
     <section class="encryption_part">
         <div class="encryption_part_container">
             <label>Anahtarı girin</label>
-            <input type="text" id="txt_key_input">
+            <input type="text" id="txt_key_input" autofocus>
             <span id="INFO_txt_key_input"></span>
         </div>
         <div class="encryption_part_container">
@@ -148,6 +148,40 @@
             <br>
             yaptığım şeyleri uzun uzun anlatmak istiyorum ama biraz karışık. düzgün ifade edebileceğimden pek emin
             değilim. en iyisi bittikten sonra sakin kafayla doldurayım ben buraları.
+            <br><br>
+            şu an saat 22.13, tarih 24.03.2019...program bitti ama son adımı kontrol edemiyorum.
+            mantığım doğru ama bunu kontrol edemiyorum ki çok mantıklı dediğim bir çok noktada hatalarım oldu.
+            en son adıma kadar her şey kontrolüm altındaydı. ufak ufak test edip öyle görüyordum işimi, am şu halinde
+            bu pek mümkn değil. programı test etmenin bir younu bulmam lazım.
+            <br>
+            şu anda sonuç olarak test ettiğimde istenen sonucu vermiyor. bunun neden kaynaklandığını bulmam lazım.
+            <br>
+            offf allam!!! kafayı yedim :/
+            <br>
+            bir ton başka işim var ya hu...bir ton ders var...
+            <br>
+            ilk aklıma gelen matlabda adım adım gidip hazır yaptıklarımı test etmek. ama o da bir kod yazmaya dönüşürse
+            ya? o da ayrı sıkıntı...
+            <br>
+            acaba şu python kütüphanesi nasıl çalışıyor?
+            <br><br>
+            şu an saat 22.49, 25.03.2019
+            <br>
+            akşam üzeri 6 gibidir bakınıyorum...uzun uzun inceledim algoritmayı..
+            ilk olarak girişteki bloğu initial permutation'dan geçirmeyi unutmuşum onu düzelttim.
+            am ahala çalışmadı ardından bazı düzenlemeler daha yapmak zorunda kaldım.
+            <br>
+            meselea hızlıca kontrol edeyim ayağına encryptionRounds fonksiyonunda hemen sonucu
+            final_block_permutation'dan geçirip sonuca ulaşmaya çalışmıştım. ama hatalı yapmışım. acele işe şeytan
+            karışır diye boşuna dememişler. her neyse... oraları da düzelttik çok şükür... en sonda bir sağ-sol çevrimi
+            daha varmış onu da farkettim kitaptan, onu da düzelttim. sonuçlar yaklaşık olarak doğru çıkmaya başladı.
+            çıkan hex sonucun sadece son haneleri hatalı. düşündüm. bir yerde bir hata olsa bütün sonuç hatalı çıkar.
+            tuttum sonucu bit bit kontrol ettim. hata yok. des'in sitesindeki ile ayı sonuç. meğer binary'den hex'e
+            dönüşüm sırasında sorun oluyormuş. onun için de bir fonksiyon yazdım. hem hex'e hem int'e hem de char'a
+            çevirdim.. dedim al! al! bunu da al! dedim. lanet olsun dedim. yine çok iyiyim :)
+            <br>
+            sonuç : encryption bitti.... yarabbi şükür... ne zor işmiş yav.
+
 
 
             <div class="footnotes">
@@ -189,61 +223,7 @@
         const INFO_txt_key_input = document.getElementById('INFO_txt_key_input');
         const TA_plainText = document.getElementById('TA_plainText');
         const TA_cipherText = document.getElementById('TA_cipherText');
-        //--------------------------------------------------------------------------işlemler için gerekli blobal sabitler
-        //anahtar bitlerini karıştıran dizi(tek tek elle girmesi de bir acayip, kendimi numaralara takılmış saykolar hissettim)
-        const inital_key_permutation = [
-            57, 49, 41, 33, 25, 17, 9, 1,
-            58, 50, 42, 34, 26, 18, 10, 2,
-            59, 51, 43, 35, 27, 19, 11, 3,
-            60, 52, 44, 36, 63, 55, 47, 39,
-            31, 23, 15, 7, 62, 54, 46, 38,
-            30, 22, 14, 6, 61, 53, 45, 37,
-            29, 21, 13, 5, 28, 20, 12, 4
-        ];
-        //anahtar oluşturmanın diğer adımlarında kullanılan key_permutation pc-2
-        const round_key_permuatiton = [
-            14, 17, 11, 24, 1, 5, 3, 28,
-            15, 6, 21, 10, 23, 19, 12, 4,
-            26, 8, 16, 7, 27, 20, 13, 2,
-            41, 52, 31, 37, 47, 55, 30, 40,
-            51, 45, 33, 48, 44, 49, 39, 56,
-            34, 53, 46, 42, 50, 36, 29, 32
-        ];
-        //şifreleme sırasında xor için kullanılacak dizi, 32 biti alıp 48 bit yapacak
-        const expansion_permutation = [
-            32, 1, 2, 3, 4, 5,
-            4, 5, 6, 7, 8, 9,
-            8, 9, 10, 11, 12, 13,
-            12, 13, 14, 15, 16, 17,
-            16, 17, 18, 19, 20, 21,
-            20, 21, 22, 23, 24, 25,
-            24, 25, 26, 27, 28, 29,
-            28, 29, 30, 31, 32, 1
 
-        ];
-        //gelen blockların bitlerinin karıştırılması için kullanılacak dizi
-        const initial_block_permutation = [
-            58, 50, 42, 34, 26, 18, 10, 2,
-            60, 52, 44, 36, 28, 20, 12, 4,
-            62, 54, 46, 38, 30, 22, 14, 6,
-            64, 56, 48, 40, 32, 24, 16, 8,
-            57, 49, 41, 33, 25, 17, 9, 1,
-            59, 51, 43, 35, 27, 19, 11, 3,
-            61, 53, 45, 37, 29, 21, 13, 5,
-            63, 55, 47, 39, 31, 23, 15, 7
-
-        ];
-
-        const final_block_permutation = [
-            40, 8, 48, 16, 56, 24, 64, 32,
-            39, 7, 47, 15, 55, 23, 63, 31,
-            38, 6, 46, 14, 54, 22, 62, 30,
-            37, 5, 45, 13, 53, 21, 61, 29,
-            36, 4, 44, 12, 52, 20, 60, 28,
-            35, 3, 43, 11, 51, 19, 59, 27,
-            34, 2, 42, 10, 50, 18, 58, 26,
-            33, 1, 41, 9, 49, 17, 57, 25
-        ];
         //--------------------------------------------------------------------------EVENTLAR
         BTN_encrypt.addEventListener('click', (e) => {
             //eldeki stringi bit dizisiine çevir
@@ -259,19 +239,93 @@
                 // let testarray = [];
                 // for (let i = 1; i <= 64; i++) {
                 //     testarray[i - 1] = i;
-
                 // }
                 // let allGeneratedKeys = generateKeys(testarray);
                 // console.log(allGeneratedKeys);
-                //_________________________________
-                //Eldeki
+
+                //Kullanılacak anahtarları elde et
                 let all48BitKeys = generateKeys(bitStream);
-                console.log(all48BitKeys);
+                //TEST
+                // console.log("all48BitKeys")
+                // console.log(all48BitKeys);
+
                 //girilen metni 64Bitlik Bloklara böl;
                 let plainString = TA_plainText.value;
                 let plainTextIn64BitBlocks = stringTo64BitBlocks(plainString);
 
+                //bu 64bitlik blokları initial permutation'dan geçir
+                for (let i = 0; i < plainTextIn64BitBlocks.length; i++) {
+                    plainTextIn64BitBlocks[i] = doInitalalPermutatin(plainTextIn64BitBlocks[i]);
+                    //TEST
+                    //      ↓ Giriş 
+                    // doInitalalPermutatin("0123456701234567012345670123456701234567012345670123456701234567");
+                    //      ↓ Çıkış
+                    // ["1", "1", "1", "1", "1", "1", "1", "1", 
+                    // "3", "3", "3", "3", "3", "3", "3", "3", 
+                    // "5", "5", "5", "5", "5", "5", "5", "5",
+                    // "7", "7", "7", "7", "7", "7", "7", "7", 
+                    // "0", "0", "0", "0", "0", "0", "0", "0", 
+                    // "2", "2", "2", "2", "2", "2", "2", "2", 
+                    // "4", "4", "4", "4", "4", "4", "4", "4", 
+                    // "6", "6", "6", "6", "6", "6", "6", "6"]
+                    //burdan şu sonuç çıkıyor...initial permutation sadece tekli indislerle çiftli indisleri alıp
+                    //diziyor aslında :) yanlışlıkla keşfettim :)
+                }
 
+                //Eldeki her bir block için sifreleme yapılacak
+                let final_cipher_results = [];
+                for (let i = 0; i < plainTextIn64BitBlocks.length; i++) {
+                    //bloğu sağ ve sol olarak ikiye ayıt(left and Right)
+                    let leftAndRight = getLeftandRight(plainTextIn64BitBlocks[i]);
+                    let left = leftAndRight.left;
+                    let right = leftAndRight.right;
+                    // console.log("left");
+                    // console.log(left);
+                    // console.log("right")
+                    // console.log(right)
+                    let cipher_block = encryptionRounds(left, right, all48BitKeys);
+                    final_cipher_results[i] = final_permutation(cipher_block);
+                    //TEST KISMI!!!!!!!
+                    // let cipher_block = encryptionRounds(
+                    //     [1, 2, 3, 4, 5, 6, 7, 8,
+                    //         9, 10, 11, 12, 13, 14, 15, 16,
+                    //         17, 18, 19, 20, 21, 22, 23, 24,
+                    //         25, 26, 27, 28, 29, 30, 31, 32
+                    //     ],
+                    //     [1, 2, 3, 4, 5, 6, 7, 8,
+                    //         9, 10, 11, 12, 13, 14, 15, 16,
+                    //         17, 18, 19, 20, 21, 22, 23, 24,
+                    //         25, 26, 27, 28, 29, 30, 31, 32
+                    //     ], all48BitKeys);
+                }
+                //gördüğüm kadarıyla program doğru çalışıyor, ama üretilen bit dizisini
+                //hex'e çevirirken 'parseInt' fonksiyonu kullanıyordum. orda bir sorun çıkıyor.
+                //ilk 7 kelime(ikili hex'ler) doğru ççeviriyor, sonrakiler sıkıntılı. bit düzeyinde bakıyorum
+                //hiç bir sıkıntı yok. sitedekinin aynısı ama parse int sırasında sıkıntı çıkıyor.
+                //ben de bu sonuçları alıp 8bitlik(1 byte'lık) parçalara bölüp o şekil çevireceğim hexe
+                //ve diğer türlere
+                TA_cipherText.value = ""; // şifre sonucu ekranını temizle;
+                let integer_version = "";
+                let hex_version = "";
+                let character = "";
+                for (let i = 0; i < final_cipher_results.length; i++) {
+                    //convert binary string to int hex and char!!!
+                    let block_results = convertBinaryString(final_cipher_results[i].join(
+                        '')); //join çünkü string olarak vereceğiz
+                    if (i > 0) {
+                        integer_version = integer_version + " " + block_results.integer;
+                        hex_version = hex_version + " " + block_results.hex;
+                        character = character + block_results.char;
+                    } else {
+                        integer_version = integer_version + block_results.integer;
+                        hex_version = hex_version + block_results.hex;
+                        character = character + block_results.char;
+                    }
+                }
+                TA_cipherText.value +=
+                    "integer_version\n" + integer_version + "\n\n" +
+                    "hex_version\n" + hex_version + "\n\n" +
+                    "character_version\n" + character + "\n\n\n";
             }
         });
         TXT_key_input.addEventListener('input', (e) => {
@@ -284,9 +338,9 @@
         //=====================16 farklı anahtarı oluşturan GENEL Fonksiyon
         function generateKeys(bitStream) {
             //initial permuation ile 64 bitlik anahtar içerisinden istenen yerleri al işle ve 56bite düşür.
-            var reArrangedKey = arrangeKey(bitStream);
+            var pc1_results = do_pc1_permutation(bitStream);
             //bu 56 bitlik anahtarı c0 ve d0 diye iki parçaya böl
-            C0andD0 = splitTheArrangedKey(reArrangedKey)
+            C0andD0 = splitTheArrangedKey(pc1_results)
             let c0 = C0andD0.c0;
             let d0 = C0andD0.d0;
             //bölünmüş anahtarı al ve bunları 16 kez çevirerek(başını sonuna almak sureti ile)
@@ -296,14 +350,17 @@
             let shifted_arrays = rotateCandDs(c0, d0);
             let c0Toc16 = shifted_arrays.c0Toc16;
             let d0Tod16 = shifted_arrays.d0Tod16;
-            console.log(c0Toc16);
-            console.log(d0Tod16); // TEST
+            // console.log("c0Toc16");
+            // console.log(c0Toc16);
+            // console.log("d0Tod16");
+            // console.log(d0Tod16); // TEST
             //bu c ve d dizilerini P-2 tablosuna göre düzenle
             let resultKeys = [];
             for (let i = 1; i < c0Toc16.length; i++) {
-                resultKeys[i] = make48bitKeys(c0Toc16[i], d0Tod16[i]);
+                //resultkeys i-1 çünkü c0 ve d0'ı kullanmadık. öbür tülü 
+                //resultkeys'in ilk elemanı(0. indis boşta kalıyor)
+                resultKeys[i - 1] = make48bitKeys(c0Toc16[i], d0Tod16[i]);
             }
-
             return resultKeys;
         }
         //=====================Duz metni bitlere dönüştüren ve 64Bitlik parçalara bölen GENEL FONKSİYON
@@ -322,19 +379,238 @@
                 result[index] = bitStream.slice(i, i + blokUzunluğu);
                 index++;
             }
+            //eğer en son parça 64'ten az ize 0 ile doldur
             if (result[result.length - 1] % 64 != 0) {
-                console.log('if içi çalıtı')
                 let temp = result[result.length - 1];
-                for (let i = 0; i < 64 - temp.length; i++) {
-                    temp = temp + "\x00";
-                    console.log(i);
+                let length = temp.length; //bu lazım çünkü temp uzunluğu dinamik olarak değişecek(for döngüsünde)
+                // console.log('if içi çalıtı')
+                // console.log(temp.length)
+                for (let i = 0; i < 64 - length; i++) {
+                    temp = temp + "0";
                 }
-
-                console.log("TEMP");
-                console.log(temp.length)
+                // console.log("TEMP");
+                // console.log(String.fromCharCode(0))
+                result[result.length - 1] = temp;
             }
-            // console.log(result);//TEST
+            // console.log("64 bit block results"); //TEST
+            // console.log(result);
             return result;
+        }
+        //===================== 16 kez çevrim yaparak metn şifreleyen kısım,
+        function encryptionRounds(inputLeft, inputRight, all48BitKeys) {
+            for (let i = 0; i < 16; i++) {
+                let f_result = fFunction(inputRight, all48BitKeys[i]);
+                let new_right = xor2Array(f_result, inputLeft);
+                inputLeft = inputRight;
+                inputRight = new_right;
+            }
+            result_array = inputRight.concat(inputLeft); //Son bir kez yerlerini değiştiriyorum!!!!
+            //sağı başa aldım, solu sağ tarafa
+
+            return result_array;
+        }
+
+        //===================== EN sondaki binary'den hex'tir integerDır felan çevirme işlemleri
+        function convertBinaryString(inputString) {
+            let index = 0;
+            block_size = 8;
+            let ver_int = "";
+            let ver_hex = "";
+            let ver_char = "";
+            for (let i = 0; i < inputString.length; i = i + block_size) {
+                let part = inputString.slice(i, i + block_size);
+                ver_int = ver_int + " " + parseInt(part, 2);
+                ver_hex = ver_hex + " " + parseInt(part, 2).toString(16);
+                ver_char = ver_char + String.fromCharCode(parseInt(part, 2));
+            }
+            ver_int = ver_int.slice(1, ver_int.length); //ilk başta oluşan gereksiz boşlüğü sil
+            ver_hex = ver_hex.slice(1, ver_hex.length);
+            //TEST
+            // console.log(ver_int);
+            // console.log(ver_char);
+            // console.log(ver_hex);
+            return {
+                'hex': ver_hex,
+                'integer': ver_int,
+                'char': ver_char
+            };
+        }
+
+        function doInitalalPermutatin(inputArray) {
+            let result = [];
+            for (let i = 0; i < initial_block_permutation.length; i++) {
+                result[i] = inputArray[initial_block_permutation[i] - 1];
+            }
+            return result;
+        }
+
+        function final_permutation(cipher_block) {
+            let result = [];
+            for (let i = 0; i < final_block_permutation.length; i++) {
+                result[i] = cipher_block[final_block_permutation[i] - 1];
+            }
+            return result;
+        }
+        //F fonksiyonu...anahtarı 16 roundun her çevriminde bloğun sağ kısmıyla işleyen metot
+        function fFunction(rightHalf, key48bit) {
+            let newRight48Bit = [];
+            //32 bitlik sağ tarafı(righthalf) 48 bite çeviren işlemi başlat
+            for (let i = 0; i < expansion_permutation.length; i++) {
+                newRight48Bit[i] = rightHalf[expansion_permutation[i] - 1];
+            }
+            //bu 48 bitlik sağ ile 48 bitlik anahtarı Xor'la
+            let result_xoredArray = xor2Array(newRight48Bit, key48bit);
+            //bu 48 bitlik sonucu S_box'lardan geçir.
+            let s_box_Results = pass_throught_s_boxes(result_xoredArray);
+            //TEST
+            // console.log("s_box_Results");
+            // console.log(s_box_Results);
+            //gelen sonucu p permutasyon matrisinden geçir
+            let final_result = []
+
+            // test_arrray = [
+            //     1, 2, 3, 4, 5, 6, 7, 8,
+            //     9, 10, 11, 12, 13, 14, 15, 16,
+            //     17, 18, 19, 20, 21, 22, 23, 24,
+            //     25, 26, 27, 28, 29, 30, 31, 32
+            // ];
+            for (let i = 0; i < pPermutation.length; i++) {
+                final_result[i] = s_box_Results[pPermutation[i] - 1];
+            }
+            //TEST
+            // console.log(final_result);
+            // console.log("newRight48Bit");
+            // console.log(newRight48Bit);
+            return final_result;
+        }
+
+        function pass_throught_s_boxes(input_xoredArray) {
+            //eldeki 48 biti 6 bitlik parçalara böl[6 birimlik küçük diziler]
+            let blocksize = 6;
+            let bitBlocks_6Bit = [];
+            let index = 0;
+            for (let i = 0; i < input_xoredArray.length; i = i + blocksize) {
+                bitBlocks_6Bit[index] = input_xoredArray.slice(i, i + blocksize);
+                index++;
+            }
+            //bu 6 bitlik parçaların her birinin ilk ve son bitleri satırı, 
+            //ortadaki 4 bit sütünu gösterir
+            let bitBlocks_4_Bit = [];
+            for (let i = 0; i < bitBlocks_6Bit.length; i++) {
+                bitBlocks_4_Bit[i] = make4bitsFrom6Bits(bitBlocks_6Bit[i], i + 1);
+            }
+            let temp = bitBlocks_4_Bit.join('');
+            let result_s_boxed32Bit = [];
+            for (let i = 0; i < temp.length; i++) {
+                result_s_boxed32Bit[i] = temp.charAt(i);
+            }
+
+            //TEST
+            // console.log("bitBlocks_4_Bit");
+            // console.log(bitBlocks_4_Bit);
+
+            return result_s_boxed32Bit;
+        }
+
+        function make4bitsFrom6Bits(array_with_length_of_6, s_box_num) {
+            let row = "" + array_with_length_of_6[0] + array_with_length_of_6[5];
+            let coloumn = "" +
+                array_with_length_of_6[1] +
+                array_with_length_of_6[2] +
+                array_with_length_of_6[3] +
+                array_with_length_of_6[4];
+            let row_numb = parseInt(row, 2);
+            let column_numb = parseInt(coloumn, 2);
+            let current_s_box;
+            switch (s_box_num) {
+                case 1:
+                    current_s_box = s_box_1;
+                    break;
+                case 2:
+                    current_s_box = s_box_2;
+                    break;
+                case 3:
+                    current_s_box = s_box_3;
+                    break;
+                case 4:
+                    current_s_box = s_box_4;
+                    break;
+                case 5:
+                    current_s_box = s_box_5;
+                    break;
+                case 6:
+                    current_s_box = s_box_6;
+                    break;
+                case 7:
+                    current_s_box = s_box_7;
+                    break;
+                case 8:
+                    current_s_box = s_box_8;
+                    break;
+
+            }
+            let int_result = current_s_box[row_numb][column_numb]
+            let binary_result = int_result.toString(2);
+            let binary_result_length = binary_result.length; // kendime sinirlenme notu:
+            //bu hatayı belki bir kaç yüz kezdir yapıyorum.
+            //başına veya sonuna bir şey ekleyeceğim dizinin for döngüsünde tekrar dizi.lenght diyerek kontrol
+            //yapmaya çalışıyorum. sonra iki saat boyunca bu niye düzgün çalışmıyor diyorum aq! :) dizinin 
+            //uzunluğunu ilk önce bir yere almam lazım çünkü!!! aksi takdirde dizinin uzunluğunu 
+            //değiştirmiş oluyorum. aslında gündelik hayat işleyişine çok uygun(artarak artan şeyler) 
+            //ama neyse konumuz bu değil :)
+            if (binary_result_length < 4) {
+                for (let i = 0; i < 4 - binary_result_length; i++) {
+                    binary_result = "0" + binary_result;
+                }
+            }
+            //---TESTTTTTTT -çalışıyor
+            // console.log("array_with_length_of_6");
+            // console.log(array_with_length_of_6);
+            // console.log("row_numb");
+            // console.log(row_numb);
+            // console.log("column_numb");
+            // console.log(column_numb);
+            // console.log("s_box_num");
+            // console.log(s_box_num);
+            // console.log("current_s_box");
+            // console.log(current_s_box);
+            // console.log("binary_result");
+            // console.log(binary_result);
+            return binary_result;
+        }
+
+        function xor2Array(arr1, arr2) {
+            let result_array = [];
+            for (let i = 0; i < arr1.length; i++) {
+                if (arr1[i] == arr2[i]) {
+                    result_array[i] = "0";
+                } else {
+                    result_array[i] = "1";
+                }
+            }
+            //TEST
+            // console.log("arr1");
+            // console.log(arr1);
+            // console.log("arr2");
+            // console.log(arr2);
+            // console.log("result_array");
+            // console.log(result_array);
+            return result_array;
+        }
+        //64 biti al ikiye böl ve geri yolla
+        //(aynı işi yapan fonksiyonu yazmışız daha önce ama olsun bkz: splitTheArrangedKey)
+        function getLeftandRight(bitBlock) {
+            let middle = bitBlock.length / 2;
+            let left = [];
+            let right = [];
+            for (let i = 0; i < middle; i++) {
+                left[i] = bitBlock[i];
+                right[i] = bitBlock[i + middle];
+            }
+            return {
+                'left': left,
+                'right': right
+            };
         }
 
         function make48bitKeys(cArray, dArray) {
@@ -404,7 +680,7 @@
             };
         }
 
-        function arrangeKey(bitStream) {
+        function do_pc1_permutation(bitStream) {
             var result = [];
             for (let i = 0; i < inital_key_permutation.length; i++) {
                 result[i] = bitStream[
@@ -438,8 +714,7 @@
                 bitCode[i] = element;
             }
             //---------
-            let bitVersionOfString = bitCode;
-            let stringOfBits = bitVersionOfString.join('');
+            let stringOfBits = bitCode.join('');
             let length = stringOfBits.length;
             return {
                 "bitStream": stringOfBits,
@@ -456,6 +731,118 @@
                 INFO_txt_key_input.style.background = "#AA0000";
             }
         }
+        //--------------------------------------------------------------------------işlemler için gerekli global sabitler
+        //anahtar bitlerini karıştıran dizi(tek tek elle girmesi de bir acayip, kendimi numaralara takılmış saykolar hissettim)
+        const inital_key_permutation = [
+            57, 49, 41, 33, 25, 17, 9, 1,
+            58, 50, 42, 34, 26, 18, 10, 2,
+            59, 51, 43, 35, 27, 19, 11, 3,
+            60, 52, 44, 36, 63, 55, 47, 39,
+            31, 23, 15, 7, 62, 54, 46, 38,
+            30, 22, 14, 6, 61, 53, 45, 37,
+            29, 21, 13, 5, 28, 20, 12, 4
+        ];
+        //anahtar oluşturmanın diğer adımlarında kullanılan key_permutation pc-2
+        const round_key_permuatiton = [
+            14, 17, 11, 24, 1, 5, 3, 28,
+            15, 6, 21, 10, 23, 19, 12, 4,
+            26, 8, 16, 7, 27, 20, 13, 2,
+            41, 52, 31, 37, 47, 55, 30, 40,
+            51, 45, 33, 48, 44, 49, 39, 56,
+            34, 53, 46, 42, 50, 36, 29, 32
+        ];
+        //f fonksiyonu içinde şifreleme sırasında xor için kullanılacak dizi, 32 biti alıp 48 bit yapacak
+        const expansion_permutation = [
+            32, 1, 2, 3, 4, 5,
+            4, 5, 6, 7, 8, 9,
+            8, 9, 10, 11, 12, 13,
+            12, 13, 14, 15, 16, 17,
+            16, 17, 18, 19, 20, 21,
+            20, 21, 22, 23, 24, 25,
+            24, 25, 26, 27, 28, 29,
+            28, 29, 30, 31, 32, 1
+
+        ];
+        //f fonksiyonu içindeki son adımdaki permutasyon
+        const pPermutation = [
+            16, 7, 20, 21, 29, 12, 28, 17,
+            1, 15, 23, 26, 5, 18, 31, 10,
+            2, 8, 24, 14, 32, 27, 3, 9,
+            19, 13, 30, 6, 22, 11, 4, 25
+        ]
+        //gelen blockların bitlerinin karıştırılması için kullanılacak dizi
+        const initial_block_permutation = [
+            58, 50, 42, 34, 26, 18, 10, 2,
+            60, 52, 44, 36, 28, 20, 12, 4,
+            62, 54, 46, 38, 30, 22, 14, 6,
+            64, 56, 48, 40, 32, 24, 16, 8,
+            57, 49, 41, 33, 25, 17, 9, 1,
+            59, 51, 43, 35, 27, 19, 11, 3,
+            61, 53, 45, 37, 29, 21, 13, 5,
+            63, 55, 47, 39, 31, 23, 15, 7
+
+        ];
+
+        const final_block_permutation = [
+            40, 8, 48, 16, 56, 24, 64, 32,
+            39, 7, 47, 15, 55, 23, 63, 31,
+            38, 6, 46, 14, 54, 22, 62, 30,
+            37, 5, 45, 13, 53, 21, 61, 29,
+            36, 4, 44, 12, 52, 20, 60, 28,
+            35, 3, 43, 11, 51, 19, 59, 27,
+            34, 2, 42, 10, 50, 18, 58, 26,
+            33, 1, 41, 9, 49, 17, 57, 25
+        ];
+
+        const s_box_1 = [
+            [14, 04, 13, 01, 02, 15, 11, 08, 03, 10, 06, 12, 05, 09, 00, 07],
+            [00, 15, 07, 04, 14, 02, 13, 01, 10, 06, 12, 11, 09, 05, 03, 08],
+            [04, 01, 14, 08, 13, 06, 02, 11, 15, 12, 09, 07, 03, 10, 05, 00],
+            [15, 12, 08, 02, 04, 09, 01, 07, 05, 11, 03, 14, 10, 00, 06, 13]
+        ]
+        const s_box_2 = [
+            [15, 01, 08, 14, 06, 11, 03, 04, 09, 07, 02, 13, 12, 00, 05, 10],
+            [03, 13, 04, 07, 15, 02, 08, 14, 12, 00, 01, 10, 06, 09, 11, 05],
+            [00, 14, 07, 11, 10, 04, 13, 01, 05, 08, 12, 06, 09, 03, 02, 15],
+            [13, 08, 10, 01, 03, 15, 04, 02, 11, 06, 07, 12, 00, 05, 14, 09]
+        ]
+        const s_box_3 = [
+            [10, 00, 09, 14, 06, 03, 15, 05, 01, 13, 12, 07, 11, 04, 02, 08],
+            [13, 07, 00, 09, 03, 04, 06, 10, 02, 08, 05, 14, 12, 11, 15, 01],
+            [13, 06, 04, 09, 08, 15, 03, 00, 11, 01, 02, 12, 05, 10, 14, 07],
+            [01, 10, 13, 00, 06, 09, 08, 07, 04, 15, 14, 03, 11, 05, 02, 12]
+        ]
+        const s_box_4 = [
+            [07, 13, 14, 03, 00, 06, 09, 10, 01, 02, 08, 05, 11, 12, 04, 15],
+            [13, 08, 11, 05, 06, 15, 00, 03, 04, 07, 02, 12, 01, 10, 14, 09],
+            [10, 06, 09, 00, 12, 11, 07, 13, 15, 01, 03, 14, 05, 02, 08, 04],
+            [03, 15, 00, 06, 10, 01, 13, 08, 09, 04, 05, 11, 12, 07, 02, 14]
+        ]
+        const s_box_5 = [
+            [02, 12, 04, 01, 07, 10, 11, 06, 08, 05, 03, 15, 13, 00, 14, 09],
+            [14, 11, 02, 12, 04, 07, 13, 01, 05, 00, 15, 10, 03, 09, 08, 06],
+            [04, 02, 01, 11, 10, 13, 07, 08, 15, 09, 12, 05, 06, 03, 00, 14],
+            [11, 08, 12, 07, 01, 14, 02, 13, 06, 15, 00, 09, 10, 04, 05, 03]
+        ]
+        const s_box_6 = [
+            [12, 01, 10, 15, 09, 02, 06, 08, 00, 13, 03, 04, 14, 07, 05, 11],
+            [10, 15, 04, 02, 07, 12, 09, 05, 06, 01, 13, 14, 00, 11, 03, 08],
+            [09, 14, 15, 05, 02, 08, 12, 03, 07, 00, 04, 10, 01, 13, 11, 06],
+            [04, 03, 02, 12, 09, 05, 15, 10, 11, 14, 01, 07, 06, 00, 08, 13]
+        ]
+        const s_box_7 = [
+            [04, 11, 02, 14, 15, 00, 08, 13, 03, 12, 09, 07, 05, 10, 06, 01],
+            [13, 00, 11, 07, 04, 09, 01, 10, 14, 03, 05, 12, 02, 15, 08, 06],
+            [01, 04, 11, 13, 12, 03, 07, 14, 10, 15, 06, 08, 00, 05, 09, 02],
+            [06, 11, 13, 08, 01, 04, 10, 07, 09, 05, 00, 15, 14, 02, 03, 12]
+        ]
+
+        const s_box_8 = [
+            [13, 02, 08, 04, 06, 15, 11, 01, 10, 09, 03, 14, 05, 00, 12, 07],
+            [01, 15, 13, 08, 10, 03, 07, 04, 12, 05, 06, 11, 00, 14, 09, 02],
+            [07, 11, 04, 01, 09, 12, 14, 02, 00, 06, 10, 13, 15, 03, 05, 08],
+            [02, 01, 14, 07, 04, 10, 08, 13, 15, 12, 09, 00, 03, 05, 06, 11]
+        ]
     </script>
 </body>
 
