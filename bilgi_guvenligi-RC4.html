@@ -1,75 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>RC4 Şifreleme Algoritması</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            font-size: 14px;
+            text-transform: capitalize;
+        }
+
+        section {
+            margin: auto;
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            /* width: 50%; */
+            margin-top: 0.5rem;
+        }
+
+        label {
+            margin: 0.5rem 0 0 3rem;
+        }
+
+        textarea,
+        input {
+            margin-top: 0.5em;
+        }
+
+        .description {
+            margin: auto;
+            width: 70%;
+            margin-top: 2em;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        p,
+        .kaynaklar {
+            margin: auto;
+            width: 70%;
+            border: 1px dashed grey;
+            text-decoration: none;
+            line-height: 1.5rem;
+            padding: 1rem;
+            text-transform: none;
+        }
+
+        span {
+            /* font-size:16px; */
+            font-weight: bold;
+        }
+
+        .program-inputs {
+            margin: auto;
+            width: 90%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+        }
+
+        .headline {
+            font-size: 16px;
+            font-weight: bold;
+        }
+    </style>
 </head>
-<style>
-    body {
-        font-family: sans-serif;
-        font-size: 14px;
-        text-transform: capitalize;
-    }
 
-    section {
-        margin: auto;
-        display: grid;
-        grid-template-columns: 1fr 3fr;
-        /* width: 50%; */
-        margin-top: 0.5rem;
-    }
-
-    label {
-        margin: 0.5rem 0 0 3rem;
-    }
-
-    textarea,
-    input {
-        margin-top: 0.5em;
-    }
-
-    .description {
-        margin: auto;
-        width: 70%;
-        margin-top: 2em;
-    }
-
-    h2 {
-        text-align: center;
-    }
-
-    p,
-    .kaynaklar {
-        margin: auto;
-        width: 70%;
-        border: 1px dashed grey;
-        text-decoration: none;
-        line-height: 1.5rem;
-        padding: 1rem;
-        text-transform: none;
-    }
-
-    span {
-        /* font-size:16px; */
-        font-weight: bold;
-    }
-
-    .program-inputs {
-        margin: auto;
-        width: 90%;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-
-    }
-
-    .headline {
-        font-size: 16px;
-        font-weight: bold;
-    }
-</style>
 
 <body>
     <div class="program-inputs">
@@ -90,23 +91,23 @@
 
 
                 <section>
-                    <label for="">Key alanı</label>
-                    <textarea name="" id="keyStream" cols="30" rows="10" placeholder="Anahtar buraya gelecek inş"
+                    <label>Key alanı</label>
+                    <textarea id="keyStream" cols="30" rows="10" placeholder="Anahtar buraya gelecek inş"
                         disabled></textarea>
                 </section>
             </div>
             <div class="outputs">
                 <section>
-                    <label for=""> Şifreli metin</label>
-                    <textarea name="" id="cipherText" cols="30" rows="10" placeholder="Şifreli Metin buraya gelecek"
+                    <label> Şifreli metin</label>
+                    <textarea id="cipherText" cols="30" rows="10" placeholder="Şifreli Metin buraya gelecek"
                         disabled></textarea>
                     <div></div> <!-- empty div just aligning input-->
                     <input type="button" value="Şifreyi Çöz" id="sifreyiCoz">
                 </section>
 
                 <section>
-                    <label for="">Şifreliden Çözülen metin</label>
-                    <textarea name="" id="plainFromCipher" cols="30" rows="10" placeholder="şifreliden plaine dönüşüm"
+                    <label>Şifreliden Çözülen metin</label>
+                    <textarea id="plainFromCipher" cols="30" rows="10" placeholder="şifreliden plaine dönüşüm"
                         disabled></textarea>
                 </section>
             </div>
@@ -114,19 +115,19 @@
         <div class="decryption">
             <label class="headline">ŞİFRE'den ÇÖZ:</label>
             <section>
-                <label for="">Anahatar</label>
-                <input type="text" name="" id="keyForDecryption">
-                <label for="">Şifreli metni girip çöz</label>
-                <textarea name="" id="cipherTextAlternative" cols="30" rows="10"></textarea>
+                <label>Anahatar</label>
+                <input type="text" id="keyForDecryption">
+                <label>Şifreli metni girip çöz</label>
+                <textarea id="cipherTextAlternative" cols="30" rows="10"></textarea>
             </section>
             <section>
                 <div></div>
                 <!--empty div just aligning input -->
                 <input type="button" value="Düz Metinden Şifreyi Çöz" id="decryptTheTextFromPlain">
                 <div></div>
-                <input type="button" name="" id="decryptTheTextFromCommaHEX" value="Virgüllü HEX'ten Çöz">
-                <label for=""> Düz Metin</label>
-                <textarea name="" id="plainTextResult" cols="30" rows="10" disabled></textarea>
+                <input type="button" id="decryptTheTextFromCommaHEX" value="Virgüllü HEX'ten Çöz">
+                <label> Düz Metin</label>
+                <textarea id="plainTextResult" cols="30" rows="10" disabled></textarea>
             </section>
         </div>
     </div>
@@ -136,149 +137,149 @@
 
 
     <div class="description">
-        <h2>Açıklama:</h6>
-            <p>Bu program ne yapar?
-                <br>
-                <span>kısaca:</span>
-                <br>
-                verilen metni bri anahtar yardımıyla RC4 algoritması mantığına uygun bir şekilde şifreler.
-            </p>
-            <p>
-                <br>
-                <span>uzunca ise:</span>
-                <br><br>
-                &DoubleLongRightArrow; mantık olarak &DoubleLongLeftArrow;
-                <br>
-                amaç elimizdeki metnin binary versiyonunu aynı uzunluktaki binary anahtar ile XOR'lamak
-                ve sonuçta şifreli bir metin elde etmek.
-                ardından bu şifreli meetin ve anahtarı karşı tarafa yollayacağız. karşı taraf da bu sefer şifreli
-                metin ile anahtarı XOR'layıp Göndermek istediğimiz asıl metni elde etmeye çalışacak.
-                bu mantığın basitliği su götürmez bir gerçek. ama sıkıntılı olan nokta göndereceğimiz her bit için aynı
-                zamanda
-                bir anahtar biti de göndermemiz gerektiği. bu bilgisayarlar dünyası için, veri yükünü arttırdığından,
-                iletişimde tercih edilmeyen, istenmeyen bir durum meydana getiriyor. alternatif bir yol arayışında
-                vardığımız nokta şu:
-                <br>
-                anahtarın sadece belirli bir kısmını(başlangıç değerini) kullanıcı olarak manuel girip geri kalanını
-                "yeterince karmaşık" bir fonksiyon ile elde etmek. bu şekilde ne kadar uzun veri gönderirsek
-                gönderelim.
-                karşı taraf bu başlangıç anahtardan yola çıkarak ihtiyaç duyduğu anahtarı yine aynı fonksiyonu
-                kullanarak elde edebilecek. böylece uzun uzun anahtar verisi göndermekten kurtulmuş olacağız.
-                işte RC4 dediğimiz algoritma aslında bu kısımda devreye giriyor. "yeterince karmaşık bir fonksiyon"
-                olma aşamasında.
-                <br><br>
-                &DoubleLongRightArrow; Teknik detay babında &DoubleLongLeftArrow;
-                <br>
-                mesut ustadan yemek tarifi verir gibi anlatıyorum.
-                <br>
-                şifrele butonuna basıldığında, javascriptin bir click 'event(hadise)'si meydana gelir.
-                bu fonksiyon içerisinde önce doldurulması gereken alanların(düz metin ve giriş anahtarı)
-                dolu olup olmadığı kontrol edilir. eğer alanlar dolu değil ise uyarı verilir. eğer dolu ise:
-                <br>
-                ilk önce anahtar değerini oluşturan karakterler birer birer hangi sayı değerine karşılık geliyorsa
-                o sayıya dönüştürülür. ardından bu sayılar bir dizi içerisinde muhafaza edilir, saklanır.
-                şimdilik bu diziyi bir köşede bekletiyoruz.
-                ardından S_Dizisi dediğimiz bir değişken oluşturuyoruz ki kaynaklar sürekli "S" diye geçer[1].
-                bu S dizisinin içerisini belirlediğimiz kelime uzunluğuna göre dolduruyoruz. şöyle ki:
-                <br>
-                eğer 8bit uzunluğundaki kelimelerle çalışacaksak o zaman 8bit ile ifade edilebilecek tüm
-                permütasyonları içeren bir dizi oluşturmmız gerekiyor. bu da 2^8 yani 256 tane ihtimal demek.
-                bu ihtimalleri siz aslında 0'dan 255'e kadar saydığınızda elde ediyorsunuz. dolayısıyla S dizimizi
-                0,1,2,3,45,,,,255 şeklinde doldurduğumuzda tüm bu ihtimalleri(peermütasyonları) dizimize eklemiş
-                oluyoruz.
-                <br>
-                amaç da zaten tüm permütasyonları diziye eklemek. ardından karıştırmak. S dizimizi doldurduktan sonra
-                sıra en önemli yere geliyor. elimizdeki girdi anahtar değerine göre bu diziyi karıştırmak.
-                bu işlem şöyle yapılıyor:
-                <br>
-                dizi üzerinden, dizinin uzunluğu kadar geçerek her seferinde dizideki iki elemanın yerini
-                değiştiriyoruz.
-                il önce başlangıç değeri 0 olan bir değişken belirlernir(j), ardından bu j'nin değeri,
-                <br>
-                j = (j + SDizinin_bu_döngü_adımındaki_içeriği + ilkbaşta_belirlediğimiz_anahtarın_bu_adımdaki
-                değerinin_bu_adımdaki_değere_göre_modu) 'nun mod 256'ya göre değeri
-                <br>
-                evet biraz karışık oldu. kısacası bir for döngüsü var. bu for döngüsü 255 kez çalışacak.
-                her seferinde j değerini, S dizinin o döngü adımındaki değerini(ilk sferi ise ilk elemanı, 105. sferi
-                ise 105. elemanı) ve bir de anahtar olarak girilen kelimeden elde ettiğimiz o sayı değeri dizini
-                dönüşümlü olarak topluyor(dizi 4 karakter ise ilk adımda 1. eleman, 5. adımda tekrar 1.e eleman
-                kullanılıyor) bu toplamın da 256'yı aşmasını önlemek için modunu alıyor. böylece "yeterince karmaşık"
-                şanslı sayıyı elde etmiş oluyoruz.
-                <br>
-                şimdi sıra geldi yer değiştirmeye. bu adım basit. bulduğumuz bu şansı sayıyı kullanarak, döngüde hangi
-                adımda isek(5. adım diyelim) dizimizin bu adımındaki değere(5. eleman) karşılık gelen eleman ile
-                bulduğumuz o şanslı sayıya karşılık gelen elemann yerini değiştiriyoruz. bu işlem tekrarlı olarak
-                dizinin sonuna kadar gidiyor.
-                <br>
-                ÖRNEK: <br>
-                diyelim ki giriş anahtarımız: abc <br>
-                bunun rakamsal karşılığı: 97 98 99 <br>
-                S dizimizi de oluşturduk. karıştırmaya başlıyoruz:
-                <br>
-                j değerimiz =0 <br>
-                i değerimiz = 0 (dizilerde indexler 0'dan başlıyor) <br>
-                dizinin ilk elemanını(i. indexteki eleman, yani 0. index = 1. Eleman) = 0 (diziyi sırayla doldurmuştuk
-                hatırlarsanız) <br>
-                giriş anahtarımızın da ilk değerini alıyoruz = 97 <br>
-                şimdi bunları toplayalım: 0 + 0 + 97 = 97 <br>
-                97'in mod 256'ya göre değeri yine 97. sonuç olarak j'nin yeni değeri artık 98 oldu.
-                şimdi artık yer değiştirme yapabiliriz. S dizmizdeki i'ninci(0'ıncı) eleman ile ki o da 0'dir, 98.
-                elemaanın ki o da 97(çünkü dizimiz hala sıralı duruyor, bozulmadı) yer değiştiriyoruz. Bu durumda dizi:
-                <br>
-                [97,1,2,3,4,,,,,,,,,,,96,0,98,99,100,,,,,,,255] haline gelmiş oldu.
-                <br> <br>
-                ikinci adım: <br>
-                i=1; <br>
-                j=97 (şimdilik) <br>
-                S[1] = 1; <br>
-                anahtarın i. değeri = 98 <br>
-                yeni j değeri = 97 + 1 + 98 = 196 <br>
-                bunun 256'ya göre modu = yine 196 <br>
-                şimdi yer değiştireceğiz. 2. eleman ile 196. eleman. (her ikisi de bozulmamış henüz.) şimdi dizi: <br>
-                [97,196,2,3,4,5,,,,,,,,,,,96,0,98,99,100,,,,,,,,195,1,197,198,,,,,,,255] haline geelmiş oldu. <br>
+        <h2>Açıklama:</h2>
+        <p>Bu program ne yapar?
+            <br>
+            <span>kısaca:</span>
+            <br>
+            verilen metni bri anahtar yardımıyla RC4 algoritması mantığına uygun bir şekilde şifreler.
+        </p>
+        <p>
+            <br>
+            <span>uzunca ise:</span>
+            <br><br>
+            &DoubleLongRightArrow; mantık olarak &DoubleLongLeftArrow;
+            <br>
+            amaç elimizdeki metnin binary versiyonunu aynı uzunluktaki binary anahtar ile XOR'lamak
+            ve sonuçta şifreli bir metin elde etmek.
+            ardından bu şifreli meetin ve anahtarı karşı tarafa yollayacağız. karşı taraf da bu sefer şifreli
+            metin ile anahtarı XOR'layıp Göndermek istediğimiz asıl metni elde etmeye çalışacak.
+            bu mantığın basitliği su götürmez bir gerçek. ama sıkıntılı olan nokta göndereceğimiz her bit için aynı
+            zamanda
+            bir anahtar biti de göndermemiz gerektiği. bu bilgisayarlar dünyası için, veri yükünü arttırdığından,
+            iletişimde tercih edilmeyen, istenmeyen bir durum meydana getiriyor. alternatif bir yol arayışında
+            vardığımız nokta şu:
+            <br>
+            anahtarın sadece belirli bir kısmını(başlangıç değerini) kullanıcı olarak manuel girip geri kalanını
+            "yeterince karmaşık" bir fonksiyon ile elde etmek. bu şekilde ne kadar uzun veri gönderirsek
+            gönderelim.
+            karşı taraf bu başlangıç anahtardan yola çıkarak ihtiyaç duyduğu anahtarı yine aynı fonksiyonu
+            kullanarak elde edebilecek. böylece uzun uzun anahtar verisi göndermekten kurtulmuş olacağız.
+            işte RC4 dediğimiz algoritma aslında bu kısımda devreye giriyor. "yeterince karmaşık bir fonksiyon"
+            olma aşamasında.
+            <br><br>
+            &DoubleLongRightArrow; Teknik detay babında &DoubleLongLeftArrow;
+            <br>
+            mesut ustadan yemek tarifi verir gibi anlatıyorum.
+            <br>
+            şifrele butonuna basıldığında, javascriptin bir click 'event(hadise)'si meydana gelir.
+            bu fonksiyon içerisinde önce doldurulması gereken alanların(düz metin ve giriş anahtarı)
+            dolu olup olmadığı kontrol edilir. eğer alanlar dolu değil ise uyarı verilir. eğer dolu ise:
+            <br>
+            ilk önce anahtar değerini oluşturan karakterler birer birer hangi sayı değerine karşılık geliyorsa
+            o sayıya dönüştürülür. ardından bu sayılar bir dizi içerisinde muhafaza edilir, saklanır.
+            şimdilik bu diziyi bir köşede bekletiyoruz.
+            ardından S_Dizisi dediğimiz bir değişken oluşturuyoruz ki kaynaklar sürekli "S" diye geçer[1].
+            bu S dizisinin içerisini belirlediğimiz kelime uzunluğuna göre dolduruyoruz. şöyle ki:
+            <br>
+            eğer 8bit uzunluğundaki kelimelerle çalışacaksak o zaman 8bit ile ifade edilebilecek tüm
+            permütasyonları içeren bir dizi oluşturmmız gerekiyor. bu da 2^8 yani 256 tane ihtimal demek.
+            bu ihtimalleri siz aslında 0'dan 255'e kadar saydığınızda elde ediyorsunuz. dolayısıyla S dizimizi
+            0,1,2,3,45,,,,255 şeklinde doldurduğumuzda tüm bu ihtimalleri(peermütasyonları) dizimize eklemiş
+            oluyoruz.
+            <br>
+            amaç da zaten tüm permütasyonları diziye eklemek. ardından karıştırmak. S dizimizi doldurduktan sonra
+            sıra en önemli yere geliyor. elimizdeki girdi anahtar değerine göre bu diziyi karıştırmak.
+            bu işlem şöyle yapılıyor:
+            <br>
+            dizi üzerinden, dizinin uzunluğu kadar geçerek her seferinde dizideki iki elemanın yerini
+            değiştiriyoruz.
+            il önce başlangıç değeri 0 olan bir değişken belirlernir(j), ardından bu j'nin değeri,
+            <br>
+            j = (j + SDizinin_bu_döngü_adımındaki_içeriği + ilkbaşta_belirlediğimiz_anahtarın_bu_adımdaki
+            değerinin_bu_adımdaki_değere_göre_modu) 'nun mod 256'ya göre değeri
+            <br>
+            evet biraz karışık oldu. kısacası bir for döngüsü var. bu for döngüsü 255 kez çalışacak.
+            her seferinde j değerini, S dizinin o döngü adımındaki değerini(ilk sferi ise ilk elemanı, 105. sferi
+            ise 105. elemanı) ve bir de anahtar olarak girilen kelimeden elde ettiğimiz o sayı değeri dizini
+            dönüşümlü olarak topluyor(dizi 4 karakter ise ilk adımda 1. eleman, 5. adımda tekrar 1.e eleman
+            kullanılıyor) bu toplamın da 256'yı aşmasını önlemek için modunu alıyor. böylece "yeterince karmaşık"
+            şanslı sayıyı elde etmiş oluyoruz.
+            <br>
+            şimdi sıra geldi yer değiştirmeye. bu adım basit. bulduğumuz bu şansı sayıyı kullanarak, döngüde hangi
+            adımda isek(5. adım diyelim) dizimizin bu adımındaki değere(5. eleman) karşılık gelen eleman ile
+            bulduğumuz o şanslı sayıya karşılık gelen elemann yerini değiştiriyoruz. bu işlem tekrarlı olarak
+            dizinin sonuna kadar gidiyor.
+            <br>
+            ÖRNEK: <br>
+            diyelim ki giriş anahtarımız: abc <br>
+            bunun rakamsal karşılığı: 97 98 99 <br>
+            S dizimizi de oluşturduk. karıştırmaya başlıyoruz:
+            <br>
+            j değerimiz =0 <br>
+            i değerimiz = 0 (dizilerde indexler 0'dan başlıyor) <br>
+            dizinin ilk elemanını(i. indexteki eleman, yani 0. index = 1. Eleman) = 0 (diziyi sırayla doldurmuştuk
+            hatırlarsanız) <br>
+            giriş anahtarımızın da ilk değerini alıyoruz = 97 <br>
+            şimdi bunları toplayalım: 0 + 0 + 97 = 97 <br>
+            97'in mod 256'ya göre değeri yine 97. sonuç olarak j'nin yeni değeri artık 98 oldu.
+            şimdi artık yer değiştirme yapabiliriz. S dizmizdeki i'ninci(0'ıncı) eleman ile ki o da 0'dir, 98.
+            elemaanın ki o da 97(çünkü dizimiz hala sıralı duruyor, bozulmadı) yer değiştiriyoruz. Bu durumda dizi:
+            <br>
+            [97,1,2,3,4,,,,,,,,,,,96,0,98,99,100,,,,,,,255] haline gelmiş oldu.
+            <br> <br>
+            ikinci adım: <br>
+            i=1; <br>
+            j=97 (şimdilik) <br>
+            S[1] = 1; <br>
+            anahtarın i. değeri = 98 <br>
+            yeni j değeri = 97 + 1 + 98 = 196 <br>
+            bunun 256'ya göre modu = yine 196 <br>
+            şimdi yer değiştireceğiz. 2. eleman ile 196. eleman. (her ikisi de bozulmamış henüz.) şimdi dizi: <br>
+            [97,196,2,3,4,5,,,,,,,,,,,96,0,98,99,100,,,,,,,,195,1,197,198,,,,,,,255] haline geelmiş oldu. <br>
 
-                <br>
-                bu işlem dizi iyice tanınmayacak hale gelene kadar böyle devam eder. güzelce karışır. ama nihayetinde
-                içeriği değişmez. daima 256 ihtimali içerir. rc4 karıştırma işlemini bitirip bu sonucu return eder(geri
-                gönderir). bu sefer sıra bu diziyi kullanarak gerekli uzunluktaki anahtarı elde etmektir. bunun için
-                PRGA - pseudo-random-number-generator denilen kısacası farazi-rastgele-sayı-üretici dediğimiz fonskiyon
-                kullanılır. bu fonksiyon da rc4'ün üretmiş olduğu diziyi kullanarak düz metnin uzunluğuna eş uzunlukta
-                bir anahtar üretmeye çalışır. prga'da da anahtar üretilirken karıştırılmaya devam edilir. <br>
-                elimizde rc4'ün karıştırdığı dizi vardır <br>
-                i değişkeni ve j değişkenine başlangıçta 0 değeri atanır <br>
-                i değişkeni her iterasyonda(düngü adımında) 1 arttırılır ve mod 256'ya göre değeri belirenir. <br>
-                j değişkeni ise kendisi ile karışıkDizinin i. değeri ile toplamının, 256'ya göre modu, şeklinde
-                hesaplanır
-                <br>
-                ardından bu karışıkDizinin i. ve j. değerleri yer değiştirilir. <br>
-                bu daha da karıştırılmış dizinin, tekrar i. ve j. elemanları toplanıp 256'ya göre modu alınır. <br>
-                elimizdeki dizide, bu toplama sonucunun değerine karşılık gelen indis anahtarımızdır artık. <br>
-                bunu bir diziye atar saklarız. bu işlem tam olarak elimizdeki düz metnin uzunluğu kadar tekrar eder.
-                <br>
-                nihayetinde elimizde, düz metin kadar uzu olan bir anahtarımız vardır artık. sonraki adımlarda ise bu
-                düz metin bunca uğraş sonunda bulduğumuz anahtarımız ile XOR işlemine tabii tutulur ve şifreli metin
-                böylece elde edilmiş olunur.
-                <br>
-                bu şifreli metin ile ilk başta başlangıç anahtarımız olan kelime karşı tarafa yollanır. karşı taraf da
-                başlangıç anahtarını yine aynı işlemlerden geçirip anatarın uzun halini bulur. bulduğu uzun anahtarı
-                şifreli metin ile XOR işlemine tabi tutarsa düz metni elde etmiş olur. çünkü bir şeyi iki kez aynı sayı
-                ile XOR'larsanız kendisii elde edersiniz. XOR'un özelliği bu (en azından binary dünyasında).
-                <br> <br> <br>
+            <br>
+            bu işlem dizi iyice tanınmayacak hale gelene kadar böyle devam eder. güzelce karışır. ama nihayetinde
+            içeriği değişmez. daima 256 ihtimali içerir. rc4 karıştırma işlemini bitirip bu sonucu return eder(geri
+            gönderir). bu sefer sıra bu diziyi kullanarak gerekli uzunluktaki anahtarı elde etmektir. bunun için
+            PRGA - pseudo-random-number-generator denilen kısacası farazi-rastgele-sayı-üretici dediğimiz fonskiyon
+            kullanılır. bu fonksiyon da rc4'ün üretmiş olduğu diziyi kullanarak düz metnin uzunluğuna eş uzunlukta
+            bir anahtar üretmeye çalışır. prga'da da anahtar üretilirken karıştırılmaya devam edilir. <br>
+            elimizde rc4'ün karıştırdığı dizi vardır <br>
+            i değişkeni ve j değişkenine başlangıçta 0 değeri atanır <br>
+            i değişkeni her iterasyonda(düngü adımında) 1 arttırılır ve mod 256'ya göre değeri belirenir. <br>
+            j değişkeni ise kendisi ile karışıkDizinin i. değeri ile toplamının, 256'ya göre modu, şeklinde
+            hesaplanır
+            <br>
+            ardından bu karışıkDizinin i. ve j. değerleri yer değiştirilir. <br>
+            bu daha da karıştırılmış dizinin, tekrar i. ve j. elemanları toplanıp 256'ya göre modu alınır. <br>
+            elimizdeki dizide, bu toplama sonucunun değerine karşılık gelen indis anahtarımızdır artık. <br>
+            bunu bir diziye atar saklarız. bu işlem tam olarak elimizdeki düz metnin uzunluğu kadar tekrar eder.
+            <br>
+            nihayetinde elimizde, düz metin kadar uzu olan bir anahtarımız vardır artık. sonraki adımlarda ise bu
+            düz metin bunca uğraş sonunda bulduğumuz anahtarımız ile XOR işlemine tabii tutulur ve şifreli metin
+            böylece elde edilmiş olunur.
+            <br>
+            bu şifreli metin ile ilk başta başlangıç anahtarımız olan kelime karşı tarafa yollanır. karşı taraf da
+            başlangıç anahtarını yine aynı işlemlerden geçirip anatarın uzun halini bulur. bulduğu uzun anahtarı
+            şifreli metin ile XOR işlemine tabi tutarsa düz metni elde etmiş olur. çünkü bir şeyi iki kez aynı sayı
+            ile XOR'larsanız kendisii elde edersiniz. XOR'un özelliği bu (en azından binary dünyasında).
+            <br> <br> <br>
 
-                HUH...bitti...
-            </p>
+            HUH...bitti...
+        </p>
 
-            <div class="kaynaklar">
-                <h3>Kaynaklar:</h3>
-                <a href="https://en.wikipedia.org/wiki/RC4">[1] https://en.wikipedia.org/wiki/RC4</a>
-                <br>
-                <a href="https://www.rickwash.com/papers/stream.pdf">[2] Lecture Notes on Stream Ciphers and RC4 - Rick
-                    Wash</a>
-                <br>
-                <a href="https://youtu.be/-W8RWRab6H4?t=398">[3] RC4 in Python - YouTube
-                </a>
-                <br>
-            </div>
+        <div class="kaynaklar">
+            <h3>Kaynaklar:</h3>
+            <a href="https://en.wikipedia.org/wiki/RC4">[1] https://en.wikipedia.org/wiki/RC4</a>
+            <br>
+            <a href="https://www.rickwash.com/papers/stream.pdf">[2] Lecture Notes on Stream Ciphers and RC4 - Rick
+                Wash</a>
+            <br>
+            <a href="https://youtu.be/-W8RWRab6H4?t=398">[3] RC4 in Python - YouTube
+            </a>
+            <br>
+        </div>
 
     </div>
 

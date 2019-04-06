@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="bilgi_guvenligi_des_alg_decrypt.js"></script>
     <title>Document</title>
     <style>
         body {
@@ -22,15 +23,25 @@
         }
 
         section {
-            margin: auto;
-            width: 70%;
+            /* margin:auto; */
+            /*Bu tehlikeli bir komut!!!! dikeyde de ortalıyor bloğu..iki saattir bununla 
+            uğraşıyorum. kafayı yicektim az daha!!!*/
+            margin-right: auto;
+            margin-left: auto;
+            width: 90%;
             text-align: center;
-
         }
 
-        .encryption_part_container {
+        .inputs_container {
+            margin: auto;
             display: grid;
-            grid-template-columns: 1fr 2fr 1fr;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .encryption_part_container,
+        .decryption_part_container {
+            display: grid;
+            grid-template-columns: 1fr 3fr 1fr;
         }
 
         input,
@@ -60,38 +71,69 @@
             color: #f8f8f8;
         }
 
-        /* textarea,input{
-            display: block;
-            width: 200px;
-        } */
+        input[type='button'] {
+            margin: 5px;
+            padding: 2px;
+        }
     </style>
 </head>
 
 <body>
-    <br>
-    <section class="encryption_part">
-        <div class="encryption_part_container">
-            <label>Anahtarı girin</label>
-            <input type="text" id="txt_key_input" autofocus>
-            <span id="INFO_txt_key_input"></span>
-        </div>
-        <div class="encryption_part_container">
-            <label>Düz Metin</label>
-            <textarea id="TA_plainText" cols="30" rows="10"></textarea>
+    <div class="inputs_container">
+        <section class="encryption_part">
+            <h5>Şifrele</h5>
+            <div class="encryption_part_container">
+                <label>Anahtarı girin</label>
+                <input type="text" id="txt_key_input" autofocus>
+                <span id="INFO_txt_key_input"></span>
 
+                <label>Düz Metin</label>
+                <textarea id="TA_encryption_plainText" cols="30" rows="10"></textarea>
+                <div></div>
 
-        </div>
-        <div class="encryption_part_container">
-            <div></div>
-            <input type="button" value="Sifrelemeyi başlat" id="btn_encrypt">
-        </div>
-        <br>
-        <br>
-        <div class="encryption_part_container">
-            <label for="">Şifreli Metin</label>
-            <textarea id="TA_cipherText" cols="30" rows="10"></textarea>
-        </div>
-    </section>
+                <div></div>
+                <input type="button" value="Sifrelemeyi başlat" id="btn_encrypt">
+                <div></div>
+
+                <label>Şifreli Metin</label>
+                <textarea id="TA_encryption_cipherText" cols="30" rows="10"></textarea>
+                <div></div>
+            </div>
+        </section>
+        <section class="decryption_part">
+            <h5>Şifreyi Çöz</h5>
+            <div class="decryption_part_container">
+                <!-- Anahtar girişi -->
+                <label>Anahtarı girin</label>
+                <input type="text" id="txt_key_input_decryption">
+                <span id="INFO_txt_key_input_decryption"></span>
+                <!-- Şifreli metin girişi -->
+                <label>Şifreli metin</label>
+                <textarea id="TA_decryption_cipherText" cols="30" rows="10"></textarea>
+                <div></div>
+                <!-- buton hex -->
+
+                <div></div>
+                <input type="button" value="Hex Metinden şifreyi çöz" id="BTN_decrypt_HEX">
+                <div></div>
+                <!-- buton integer -->
+
+                <div></div>
+                <input type="button" value="integer Metinden şifreyi çöz" id="BTN_decrypt_INT">
+                <div></div>
+                <!-- buton character -->
+
+                <div></div>
+                <input type="button" value="character Metinden şifreyi çöz" id="BTN_decrypt_CHAR">
+                <div></div>
+                <!-- Düz metin çıkışı -->
+
+                <label>Düz metin</label>
+                <textarea id="TA_decryption_plainText" cols="30" rows="10"></textarea>
+                <div></div>
+            </div>
+        </section>
+    </div>
     <section class="explanation">
         <div>
             <b>Notlar:</b> <br>
@@ -218,11 +260,20 @@
 
     <script>
         //--------------------------------------------------------------------------CONSTANT DOM ELEMENTS
+        //encryption
         const TXT_key_input = document.getElementById('txt_key_input');
         const BTN_encrypt = document.getElementById('btn_encrypt');
         const INFO_txt_key_input = document.getElementById('INFO_txt_key_input');
-        const TA_plainText = document.getElementById('TA_plainText');
-        const TA_cipherText = document.getElementById('TA_cipherText');
+        const TA_encryption_plainText = document.getElementById('TA_encryption_plainText');
+        const TA_encryption_cipherText = document.getElementById('TA_encryption_cipherText');
+        //decryption
+        const TA_decryption_cipherText = document.getElementById('TA_decryption_cipherText');
+        const TA_decryption_plainText = document.getElementById('TA_decryption_plainText');
+        const TXT_key_input_decryption = document.getElementById('txt_key_input_decryption');
+        const BTN_decrypt_CHAR = document.getElementById('BTN_decrypt_CHAR');
+        const BTN_decrypt_HEX = document.getElementById('BTN_decrypt_HEX');
+        const BTN_decrypt_INT = document.getElementById('BTN_decrypt_INT');
+
 
         //--------------------------------------------------------------------------EVENTLAR
         BTN_encrypt.addEventListener('click', (e) => {
@@ -234,7 +285,7 @@
             //bit uzunluğu yeterli ise "yeşil" ışık yak.
             size_checked(lengthofBits);
             //anahtar yeri boş değilse ve girilen değer 64 bit ise işleme başla
-            if (TXT_key_input.value != "" && lengthofBits == 64 && TA_plainText.value != "") {
+            if (TXT_key_input.value != "" && lengthofBits == 64 && TA_encryption_plainText.value != "") {
                 //------TEST KISMI
                 // let testarray = [];
                 // for (let i = 1; i <= 64; i++) {
@@ -250,7 +301,7 @@
                 // console.log(all48BitKeys);
 
                 //girilen metni 64Bitlik Bloklara böl;
-                let plainString = TA_plainText.value;
+                let plainString = TA_encryption_plainText.value;
                 let plainTextIn64BitBlocks = stringTo64BitBlocks(plainString);
 
                 //bu 64bitlik blokları initial permutation'dan geçir
@@ -304,7 +355,7 @@
                 //hiç bir sıkıntı yok. sitedekinin aynısı ama parse int sırasında sıkıntı çıkıyor.
                 //ben de bu sonuçları alıp 8bitlik(1 byte'lık) parçalara bölüp o şekil çevireceğim hexe
                 //ve diğer türlere
-                TA_cipherText.value = ""; // şifre sonucu ekranını temizle;
+                TA_encryption_cipherText.value = ""; // şifre sonucu ekranını temizle;
                 let integer_version = "";
                 let hex_version = "";
                 let character = "";
@@ -322,18 +373,51 @@
                         character = character + block_results.char;
                     }
                 }
-                TA_cipherText.value +=
+                TA_encryption_cipherText.value +=
                     "integer_version\n" + integer_version + "\n\n" +
                     "hex_version\n" + hex_version + "\n\n" +
                     "character_version\n" + character + "\n\n\n";
             }
         });
+        //input change event
         TXT_key_input.addEventListener('input', (e) => {
             let results = getBitVersionOfString(TXT_key_input.value);
             bitStream = results.bitStream;
             lengthofBits = results.lengthofString;
             size_checked(lengthofBits);
         });
+
+        BTN_decrypt_HEX.addEventListener('click', (e) => {
+            //giriş metnini al
+            let input = TA_decryption_cipherText.value;
+            //Boşlukla ayrılmış Hex metni binary'e çevir
+            let binaryString = convertHextoBinary(input);
+            //key value in binary -- anahtarın binary halni al
+            keyValueinBinary = getBitVersionOfString(TXT_key_input_decryption.value).bitStream;
+            TA_decryption_plainText.value = decrypt_text(keyValueinBinary, binaryString);
+        });
+
+        BTN_decrypt_INT.addEventListener('click', (e) => {
+            //giriş metnini al
+            let input = TA_decryption_cipherText.value;
+            //Boşlukla ayrılmış Hex metni binary'e çevir
+            let binaryString = converIntToBınary(input);
+            //key value in binary -- anahtarın binary halni al
+            keyValueinBinary = getBitVersionOfString(TXT_key_input_decryption.value).bitStream;
+            //şifreyi çöz'e gönder!
+            TA_decryption_plainText.value = decrypt_text(keyValueinBinary, binaryString);
+        });
+        BTN_decrypt_CHAR.addEventListener('click', (e) => {
+            //giriş metnini al
+            let input = TA_decryption_cipherText.value;
+            //Boşlukla ayrılmış Hex metni binary'e çevir
+            let binaryString = getBitVersionOfString(input).bitStream;
+            //key value in binary -- anahtarın binary halni al
+            keyValueinBinary = getBitVersionOfString(TXT_key_input_decryption.value).bitStream;
+
+            TA_decryption_plainText.value = decrypt_text(keyValueinBinary, binaryString);
+        });
+
         //--------------------------------------------------------------------------FONKSIYONLAR
         //=====================16 farklı anahtarı oluşturan GENEL Fonksiyon
         function generateKeys(bitStream) {
@@ -434,6 +518,133 @@
                 'integer': ver_int,
                 'char': ver_char
             };
+        }
+        //--------------------------------------------------------------------------------------------
+        //                                                  DECRYPTION 
+        //--------------------------------------------------------------------------------------------
+        function decrypt_text(binary_string_key, binary_string_cipher) {
+            let result_string = "";
+
+
+
+            //16 generated keys in an array -- 16 adet 48bitlik alt anahtarı elde et
+            let allKeys48BitLength = generateKeys(binary_string_key);
+            //bu anahtarlar dizisini ters çevir!!( encryptionın tersi yönde işlenecek)
+            allKeys48BitLength.reverse();
+
+            // bitBlocks64 = stringTo64BitBlocks(input); // TESTTTTTTT
+            //bit dizisi şeklindeki giriş stringini 64 bitlik parçalar böl
+            bitBlocks64 = splitBy64Bit(binary_string_cipher);
+
+            //initial permutation -- ilk permütadyon
+            for (let i = 0; i < bitBlocks64.length; i++) {
+                bitBlocks64[i] = doInitalalPermutatin(bitBlocks64[i]);
+                // console.log(bitBlocks64);
+            }
+
+            let final_res = []; // sonuçlar için dizi
+            //bu blokların tamamını şifrele.
+            for (let i = 0; i < bitBlocks64.length; i++) {
+                //bloğun sağ ve sol kısmını al
+                let lftAndRght = getLeftandRight(bitBlocks64[i]);
+                let left = lftAndRght.left;
+                let right = lftAndRght.right;
+                //sağ sol ve anahtarları 16 adet çevrime yolla
+                let cipher_res = encryptionRounds(left, right, allKeys48BitLength);
+                cipher_res = final_permutation(cipher_res);
+                //gelen sonucu diziye at
+                final_res[i] = cipher_res;
+            }
+
+            //---Sonuçları yaz
+            let integer_version = "";
+            let hex_version = "";
+            let character = "";
+            for (let i = 0; i < final_res.length; i++) {
+                //convert binary string to int hex and char!!!
+                let block_results = convertBinaryString(final_res[i].join(
+                    '')); //join çünkü string olarak vereceğiz
+                if (i > 0) {
+                    integer_version = integer_version + " " + block_results.integer;
+                    hex_version = hex_version + " " + block_results.hex;
+                    character = character + block_results.char;
+                } else {
+                    integer_version = integer_version + block_results.integer;
+                    hex_version = hex_version + block_results.hex;
+                    character = character + block_results.char;
+                }
+            }
+            result_string =
+                "integer_version\n" + integer_version + "\n\n" +
+                "hex_version\n" + hex_version + "\n\n" +
+                "character_version\n" + character + "\n\n\n";
+
+
+            return result_string;
+        }
+
+        function splitBy64Bit(binaryString) {
+            let blokUzunluğu = 64;
+            let result = [];
+            let index = 0;
+            for (let i = 0; i < binaryString.length; i += blokUzunluğu) {
+                result[index] = binaryString.slice(i, i + blokUzunluğu);
+                index++;
+            }
+            //eğer en son parça 64'ten az ize 0 ile doldur
+            if (result[result.length - 1] % 64 != 0) {
+                let temp = result[result.length - 1];
+                let length = temp.length; //bu lazım çünkü temp uzunluğu dinamik olarak değişecek(for döngüsünde)
+                // console.log('if içi çalıtı')
+                // console.log(temp.length)
+                for (let i = 0; i < 64 - length; i++) {
+                    temp = temp + "0";
+                }
+                // console.log("TEMP");
+                // console.log(String.fromCharCode(0))
+                result[result.length - 1] = temp;
+            }
+            return result;
+        }
+
+        function convertHextoBinary(splitted_hex_string) {
+            let binaryString = "";
+            splitted_hex_string = splitted_hex_string.split(' ');
+            for (let i = 0; i < splitted_hex_string.length; i++) {
+                let res = parseInt(splitted_hex_string[i], 16).toString(2);
+                let lent = res.length;
+                if (lent <= 8) {
+                    for (let i = 0; i < 8 - lent; i++) {
+                        res = '0' + res;
+                    }
+                } else if (res.length < 16) {
+                    for (let i = 0; i < 16 - lent; i++) {
+                        res = '0' + res;
+                    }
+                }
+                binaryString = binaryString + res;
+            }
+            return binaryString;
+        }
+
+        function converIntToBınary(splitted_integer_string) {
+            let binaryRes = "";
+            splitted_integer_string = splitted_integer_string.split(' ');
+            for (let i = 0; i < splitted_integer_string.length; i++) {
+                let res = parseInt(splitted_integer_string[i]).toString(2);
+                let len = res.length;
+                if (len <= 8) {
+                    for (let i = 0; i < 8 - len; i++) {
+                        res = "0" + res;
+                    }
+                } else if (len < 16) {
+                    for (let i = 0; i < 16 - len; i++) {
+                        res = "0" + res;
+                    }
+                }
+                binaryRes = binaryRes + res;
+            }
+            return binaryRes;
         }
 
         function doInitalalPermutatin(inputArray) {
@@ -702,7 +913,7 @@
                 //kodlar genelde kaç bit ise o kadar uzunluktadır, bunu düzelt(5 bit ise 8 yap, 10 bit ise 16 yap gibi)
                 var element = bitCode[i];
                 var lengthOfString = element.length;
-                if (lengthOfString < 8) {
+                if (lengthOfString <= 8) {
                     for (let i = 0; i < 8 - lengthOfString; i++) {
                         element = '0' + element;
                     }
