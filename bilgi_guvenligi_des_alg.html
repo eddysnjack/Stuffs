@@ -303,7 +303,12 @@
                 //girilen metni 64Bitlik Bloklara böl;
                 let plainString = TA_encryption_plainText.value;
                 let plainTextIn64BitBlocks = stringTo64BitBlocks(plainString);
-
+                //TEST
+                // let plainTextIn64BitBlocks = [
+                //     "0000000000000000000000000000000000000000000000000000000000000000"
+                // ];
+                // console.log("plainTextIn64BitBlocks");
+                // console.log(plainTextIn64BitBlocks);
                 //bu 64bitlik blokları initial permutation'dan geçir
                 for (let i = 0; i < plainTextIn64BitBlocks.length; i++) {
                     plainTextIn64BitBlocks[i] = doInitalalPermutatin(plainTextIn64BitBlocks[i]);
@@ -377,6 +382,8 @@
                     "integer_version\n" + integer_version + "\n\n" +
                     "hex_version\n" + hex_version + "\n\n" +
                     "character_version\n" + character + "\n\n\n";
+
+
             }
         });
         //input change event
@@ -482,11 +489,19 @@
         }
         //===================== 16 kez çevrim yaparak metn şifreleyen kısım,
         function encryptionRounds(inputLeft, inputRight, all48BitKeys) {
+            // console.log('encryptionRounds Başlangıcı')
+            // console.log(inputLeft);
+            // console.log(inputRight);
             for (let i = 0; i < 16; i++) {
                 let f_result = fFunction(inputRight, all48BitKeys[i]);
                 let new_right = xor2Array(f_result, inputLeft);
                 inputLeft = inputRight;
                 inputRight = new_right;
+                if (i == 0) {
+                    // console.log('encryptionRounds ilk tur sonu:')
+                    // console.log(inputLeft);
+                    // console.log(inputRight);
+                }
             }
             result_array = inputRight.concat(inputLeft); //Son bir kez yerlerini değiştiriyorum!!!!
             //sağı başa aldım, solu sağ tarafa
@@ -672,7 +687,11 @@
             //bu 48 bitlik sağ ile 48 bitlik anahtarı Xor'la
             let result_xoredArray = xor2Array(newRight48Bit, key48bit);
             //bu 48 bitlik sonucu S_box'lardan geçir.
+            // console.log("result_xoredArray");
+            // console.log(result_xoredArray);
             let s_box_Results = pass_throught_s_boxes(result_xoredArray);
+            // console.log("s_box_Results");
+            // console.log(s_box_Results);
             //TEST
             // console.log("s_box_Results");
             // console.log(s_box_Results);
@@ -909,9 +928,8 @@
             var bitCode = [];
             //kodları bul
             for (let i = 0; i < str_input.length; i++) {
-                bitCode[i] = str_input.charCodeAt(i).toString(2);
+                var element = str_input.charCodeAt(i).toString(2);
                 //kodlar genelde kaç bit ise o kadar uzunluktadır, bunu düzelt(5 bit ise 8 yap, 10 bit ise 16 yap gibi)
-                var element = bitCode[i];
                 var lengthOfString = element.length;
                 if (lengthOfString <= 8) {
                     for (let i = 0; i < 8 - lengthOfString; i++) {
