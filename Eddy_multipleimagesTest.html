@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="GenelCSS/bootstrap-4.1.3-dist/css/bootstrap.css">
+    <script src="GenelJS/jquery-3.3.1.js"></script>
+    <script src="GenelJS/caman.full.min.js"></script>
+    <style>
+        .container_uploaded_images {
+            text-align: center;
+        }
+
+        .container_control_buttons {
+            text-align: center;
+            margin: auto;
+            width: 90%;
+        }
+
+        .description {
+            width: 50%;
+            margin: auto;
+            margin-top: 10em;
+        }
+    </style>
+</head>
+
+
+<body>
+    <!-- ========================================================CONTROL======================================================== -->
+    <div class="container_control_buttons">
+        <input type="file" id="btn_file_select" multiple>
+    </div>
+
+
+    <div class="container_uploaded_images">
+        <div id="uploaded_images">
+        </div>
+    </div>
+    <!-- ========================================================DESCRIPTION======================================================== -->
+    <div class="description">
+        <div class="paragraph">
+            görünüşe göre for döngüsü açıp birden fazla dosya okumak pek mümkün değilmiş.
+            fileReader objesi birini okurken diğeri de ardından geldiği için tak diye hata veriyor. patlıyor.
+            <br>
+            <a
+                href="https://stackoverflow.com/questions/13975031/reading-multiple-files-with-javascript-filereader-api-one-at-a-time">
+                https://stackoverflow.com/questions/13975031/reading-multiple-files-with-javascript-filereader-api-one-at-a-time
+            </a>
+            <br>
+            burda söylendiğine göre iki yöntem var. ya sürekli birbirini çağıran iki fonksiyon yazacağız, ya da
+            filereader'in yeni foreach'li api'sini kullanacağız. ben yeni şeyleri sevmiyorum :) zor olanı tercih
+            edeceğim sanırım :) yenisini kullanacaktım ama kolaya kaçmak hoşuma gitmedi açıkçası :)
+        </div>
+        <div class="paragraph">
+            <b>açıklamalar:</b>
+            <br>
+            verilen resimler alınır alt-üst veya yanlarına siyah bant eklenerek kare haline getirilir.
+            resmin ebatları 1280x1280'lik bir kareye sığmaycak bir büyüklükte ise
+            boyutu küçültülür 1280x1280'lik kareye sığacak hale getirilir.
+            <br>
+            resimler görünsün diye sayfaya yazılır.
+            <br>
+            ama aynı anda da kaydetme penceresi açılır.
+
+            <br>
+            kısacası ihtiyacım olan bir şeydi :) kendim için yazdım :)
+            <br>
+            kimseye yaranmak gibi bir nşyetim yok. ama açıklama yapmak boynumun borcu. bunu niye yazdım diye ilerde
+            kendime sormamak için :)
+        </div>
+    </div>
+
+
+
+
+    <!-- ========================================================SCRIPT======================================================== -->
+    <script>
+        //------------------------------------------ CONSTANTS 
+        const uploaded_images = document.getElementById('uploaded_images');
+        const btn_file_select = document.getElementById('btn_file_select');
+        const file_reader = new FileReader();
+        let file_names = [];
+
+
+
+        //------------------------------------------ E V E N T S
+        btn_file_select.addEventListener('change', (e) => {
+            let files = btn_file_select.files;
+            readMultipleFiles(files, 0);
+        });
+
+        function readMultipleFiles(files, index) {
+            if (files.length > index) {
+                // console.log(files[index].name);
+                if (files[index]) {
+                    file_names[index] = files[index].name;
+                    file_reader.readAsDataURL(files[index]);
+                }
+                file_reader.onload = function () {
+
+                    let current_image = new Image();
+                    current_image.src = file_reader.result;
+
+                    current_image.onload = function () {
+                        let canvas = document.createElement('canvas');
+                        canvas.style.background = "#000000";
+                        canvas.style.margin = "2px";
+                        //resmi kareye yerleştirecek fonksiyonu çağır değerleri hesapla.
+                        let size_calcs = calcSize(current_image.width, current_image.height);
+
+                        canvas.width = size_calcs.canvasSize;
+                        canvas.height = size_calcs.canvasSize;
+                        let canv_context = canvas.getContext('2d');
+                        canv_context.fillRect(0, 0, canvas.width, canvas.height); //keep/save the background!
+                        canv_context.drawImage(current_image, size_calcs.imageDrawX_start,
+                            size_calcs.imageDrawY_start, size_calcs.imageWidth, size_calcs.imageHeight);
+
+                        //-----save the canvas
+                        let link_element_a = document.createElement('a');
+                        let file_name = file_names[index];
+                        file_name = file_name.slice(0, file_name.lastIndexOf('.'));
+                        link_element_a.download = file_name + ".png";
+                        link_element_a.href = canvas.toDataURL('image/png');
+                        let mouseEvent = new MouseEvent('click');
+                        link_element_a.dispatchEvent(mouseEvent);
+
+                        //show the image
+                        uploaded_images.appendChild(canvas);
+                    }
+                    // console.log('onload çalıştı');
+                    readMultipleFiles(files, index + 1);
+                }
+            }
+        }
+
+
+        function calcSize(imgWidth, imgHeight) {
+            let canvasSize,
+                imageDrawX_start,
+                imageDrawY_start,
+                imageWidth,
+                imageHeight = 0;
+            //resmin boyutları 1280x1280'den küçükse bunu yap. resmin boyutlarını kapsayan bir kareye yerleştir.
+            if (imgWidth <= 1280 && imgHeight <= 1280) {
+                imageWidth = imgWidth;
+                imageHeight = imgHeight;
+                //eğer genişliği daha büyük ise çerçeveyi(kareyi) genişliğe göre ayarla.
+                //bu durumda resmi dikeyde ortalamk gerekecek, yani X pozisyonu değişmezken
+                //Y pozisyonu ortalanması için aradaki farkın yarısı(hem alttan hem üstten ortalama budur)
+                //kadar aşağı kaydırılacak
+                if (imgWidth > imgHeight) {
+                    canvasSize = imgWidth;
+                    let diff = Math.abs(imgHeight - imgWidth) / 2;
+                    imageDrawY_start = diff;
+                    imageDrawX_start = 0;
+                    //yok eğer dikey bir resimse bu sefer yanlara siyah bant eklenecek yani
+                    //resim bu sefer de yatayda ortalanacak(farkın yarısı kadar ötelenecek-sağa-)
+                    //ve tabi çerçeve yüksekliğe göre ayarlanacak
+                } else {
+                    canvasSize = imgHeight;
+                    let diff = Math.abs(imgHeight - imgWidth) / 2;
+                    imageDrawX_start = diff;
+                    imageDrawY_start = 0;
+                }
+                //eğer boyutlardan 1280'den büyük ise 1280'e indirge. resmin de yeniden boyutlarını hesapla.
+            } else {
+                canvasSize = 1280; // bu bizim çerçevemiz,bu durumda zaten belli artık.
+                if (imgWidth > imgHeight) {
+                    imageDrawX_start = 0;
+                    imageWidth = 1280;
+                    //hesap kitap>
+                    let image_ratio = imgWidth / imgHeight;
+                    let new_height = 1280 / image_ratio;
+                    //<hesap bitti
+                    imageDrawY_start = parseInt(Math.abs(1280 - new_height) / 2);
+                    imageHeight = new_height;
+                } else {
+                    imageDrawY_start = 0;
+                    imageHeight = 1280;
+                    //hesap>
+                    let image_ratio = imgWidth / imgHeight;
+                    let new_width = 1280 * image_ratio;
+                    //<hesap bitimi
+                    imageDrawX_start = parseInt(Math.abs(1280 - new_width) / 2);
+                    imageWidth = new_width;
+                }
+            }
+
+            return {
+                "canvasSize": canvasSize,
+                "imageDrawX_start": imageDrawX_start,
+                "imageDrawY_start": imageDrawY_start,
+                "imageWidth": imageWidth,
+                "imageHeight": imageHeight
+            };
+        }
+    </script>
+</body>
+
+</html>
